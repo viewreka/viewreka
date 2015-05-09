@@ -10,7 +10,7 @@ You can already see Viewreka in action by building the application yourself, as 
 
 Clone the repository:
 
-    git clone https://github.com/beryx/viewreka.git
+    git clone https://github.com/viewreka/viewreka.git
 
 Make sure your `JAVA_HOME` environment variable correctly points to a JDK 8u40 or later.
 
