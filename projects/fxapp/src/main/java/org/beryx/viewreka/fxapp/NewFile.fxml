@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root minWidth="404.0" prefHeight="259.0" prefWidth="800.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+  <top>
+    <BorderPane>
+         <left>
+            <Label fx:id="lbNewFileHeaderText" text="Create a new file" BorderPane.alignment="CENTER" />
+         </left>
+         <right>
+            <Label fx:id="lbNewFileHeaderIcon" prefHeight="48" prefWidth="48" BorderPane.alignment="CENTER" />
+         </right>
+    </BorderPane>
+  </top>
+  <center>
+      <VBox maxHeight="1.7976931348623157E308" prefHeight="227.0" prefWidth="760.0">
+         <BorderPane.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </BorderPane.margin>
+         <children>
+            <Separator VBox.vgrow="NEVER" />
+            <GridPane hgap="5.0" vgap="5.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label text="File name:" />
+                  <TextField fx:id="txtNewFileName" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                  <Label text="Parent folder:" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtNewFileDir" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="butNewFileDir" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#chooseFileDir" prefWidth="120.0" text="Directory..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints minWidth="120.0" prefWidth="120.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </GridPane>
+
+            <Separator VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin></Separator>
+
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </VBox>
+  </center>
+  <bottom>
+    <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" hgap="20.0" prefWidth="-1">
+      <children>
+        <Button fx:id="butNewFileOk" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#createFile" prefWidth="90.0" text="OK" />
+        <Button fx:id="butNewFileCancel" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#cancelFile" prefWidth="90.0" text="Cancel" />
+      </children>
+    </FlowPane>
+  </bottom>
+   <padding>
+      <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</fx:root>

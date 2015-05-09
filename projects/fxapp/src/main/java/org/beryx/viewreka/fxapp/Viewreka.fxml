@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.beryx.viewreka.fxapp.codearea.*?>
+<?import javafx.scene.web.*?>
+<?import org.beryx.viewreka.fxapp.*?>
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.beryx.viewreka.fxapp.codearea.ViewrekaCodeArea?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root prefHeight="800.0" prefWidth="1280.0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+  <top>
+    <VBox BorderPane.alignment="CENTER">
+	    <MenuBar>
+	      <menus>
+	        <Menu mnemonicParsing="false" text="File">
+	          <items>
+	            <MenuItem fx:id="mnuNewProject" mnemonicParsing="false" onAction="#newProject" text="New Project...">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+	            <MenuItem fx:id="mnuOpenProject" mnemonicParsing="false" onAction="#openProject" text="Open Project...">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="mnuNewFile" mnemonicParsing="false" onAction="#newFile" text="New File...">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+	            </MenuItem>
+                <MenuItem fx:id="mnuOpenFile" mnemonicParsing="false" onAction="#openFile" text="Open File...">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <SeparatorMenuItem/>
+	            <MenuItem fx:id="mnuSaveFile" mnemonicParsing="false" onAction="#saveFile" text="Save">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+	            <MenuItem fx:id="mnuSaveAll" mnemonicParsing="false" onAction="#saveAll" text="Save All">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <SeparatorMenuItem/>
+	            <MenuItem fx:id="mnuExportChart" mnemonicParsing="false" onAction="#exportChart" text="Export Chart..." />
+	            <MenuItem fx:id="mnuExportVideo" mnemonicParsing="false" onAction="#exportVideo" text="Export Video..." />
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="mnuCloseTab" mnemonicParsing="false" onAction="#closeTab" text="Close Tab">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="F4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <MenuItem fx:id="mnuCloseProject" mnemonicParsing="false" onAction="#tryCloseProject" text="Close Project">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="F4" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <SeparatorMenuItem/>
+	            <MenuItem mnemonicParsing="false" onAction="#exitProgram" text="Exit" />
+	          </items>
+	        </Menu>
+            <Menu mnemonicParsing="false" text="View">
+              <items>
+	            <MenuItem fx:id="mnuReloadProject" mnemonicParsing="false" onAction="#reloadProject" text="Reload Project">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <MenuItem fx:id="mnuStylesheet" mnemonicParsing="false" onAction="#selectStylesheet" text="CSS Stylesheet..."/>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="mnuToggleFilePane" mnemonicParsing="false" onAction="#toggleFilePane" text="Hide File Area">
+	                     <accelerator>
+	                        <KeyCodeCombination alt="UP" code="K" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+	                     </accelerator>
+	            </MenuItem>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="mnuShowSourceCode" mnemonicParsing="false" text="Show Source Code" />
+                <MenuItem fx:id="mnuShowHelp" mnemonicParsing="false" text="Show Help" />
+              </items>
+            </Menu>
+	        <Menu mnemonicParsing="false" text="Help">
+	          <items>
+	            <MenuItem mnemonicParsing="false" onAction="#about" text="About" />
+	          </items>
+	        </Menu>
+	      </menus>
+	    </MenuBar>
+         <ToolBar>
+           <items>
+             <Button fx:id="butNewProject" mnemonicParsing="false" onAction="#newProject" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="New Project" /></tooltip>
+             </Button>
+             <Button fx:id="butOpenProject" mnemonicParsing="false" onAction="#openProject" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Open Project" /></tooltip>
+             </Button>
+             <Separator orientation="VERTICAL" />
+             <Button fx:id="butNewFile" mnemonicParsing="false" onAction="#newFile" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="New File" /></tooltip>
+             </Button>
+             <Button fx:id="butOpenFile" mnemonicParsing="false" onAction="#openFile" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Open File" /></tooltip>
+             </Button>
+             <Separator orientation="VERTICAL" />
+             <Button fx:id="butSaveFile" mnemonicParsing="false" onAction="#saveFile" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Save" /></tooltip>
+             </Button>
+             <Button fx:id="butSaveAll" mnemonicParsing="false" onAction="#saveAll" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Save All" /></tooltip>
+             </Button>
+             <Separator orientation="VERTICAL" />
+             <Button fx:id="butReloadProject" mnemonicParsing="false" onAction="#reloadProject" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Reload Project" /></tooltip>
+             </Button>
+             <Separator orientation="VERTICAL" />
+             <Button fx:id="butStylesheet" mnemonicParsing="false" onAction="#selectStylesheet" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Select chart stylesheet" /></tooltip>
+             </Button>
+             <Separator orientation="VERTICAL" />
+             <Button fx:id="butExportChart" mnemonicParsing="false" onAction="#exportChart" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Export Chart" /></tooltip>
+             </Button>
+             <Button fx:id="butExportVideo" mnemonicParsing="false" onAction="#exportVideo" prefHeight="22.0" prefWidth="22.0" text="">
+               <tooltip><Tooltip text="Export Video" /></tooltip>
+             </Button>
+           </items>
+         </ToolBar>
+    </VBox>
+  </top>
+  <center>
+      <SplitPane fx:id="mainSplitPane" dividerPositions="0.2" orientation="HORIZONTAL">
+         <items>
+            <SplitPane fx:id="fileSplitPane" dividerPositions="0.8" minHeight="0.0" minWidth="0.0" orientation="VERTICAL" prefHeight="-1.0" prefWidth="-1.0">
+              <items>
+	            <TabPane fx:id="projectTabPane" minHeight="0.0" minWidth="0.0" prefHeight="-1.0" prefWidth="-1.0">
+	              <tabs>
+	                <Tab fx:id="tabSourceCode" text="Code">
+	                  <content>
+	                    <ViewrekaCodeArea fx:id="sourceCodeArea" minHeight="0.0" minWidth="0.0" prefHeight="-1.0" prefWidth="-1.0" />
+	                  </content>
+	                </Tab>
+	                <Tab fx:id="tabHelp" text="Help">
+	                  <content>
+	                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="-1.0" prefWidth="-1.0">
+                           <children>
+                              <WebView fx:id="helpBrowser" minHeight="0.0" minWidth="0.0" />
+                           </children></AnchorPane>
+	                  </content>
+	                </Tab>
+	              </tabs>
+	            </TabPane>
+	            <TextArea fx:id="errorArea" minHeight="0.0" minWidth="0.0" prefHeight="-1.0" prefWidth="-1.0" />
+              </items>
+            </SplitPane>
+            <TabPane fx:id="viewsTabPane" minHeight="0.0" minWidth="0.0" prefHeight="-1.0" prefWidth="-1.0" tabClosingPolicy="UNAVAILABLE" />
+         </items>
+      </SplitPane>
+  </center>
+</fx:root>

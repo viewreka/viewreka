@@ -1,0 +1,75 @@
+datasource dbWB(type : sql) {
+    driver = 'org.apache.derby.jdbc.EmbeddedDriver'
+    connection = "jdbc:derby:jar:(${System.properties['user.dir']}/worldbank-db.zip)worldbank"
+}
+
+view About {
+    chart descr(type : htmlChart) {
+      content = file('wb08.html')
+    }
+}
+
+view 'Life expectancy at birth' {
+    dataset dsLifeExp {
+      query = file('lifeExp.sql')
+    }
+
+    dataset dsCountry {
+      query = file('country.sql')
+    }
+
+    dataset dsRegion {
+      query = file('region.sql')
+    }
+
+    dataset dsIncome {
+      query = file('income.sql')
+    }
+
+    parameter prmRegion(type : string) {
+        possibleValues(dataset : dsRegion, valueColumn : 'name', displayedColumn: 'description')
+    }
+
+    parameter prmIncome(type : string) {
+        possibleValues(dataset : dsIncome, valueColumn : 'name', displayedColumn: 'description')
+    }
+
+    parameter prmCountry(type : string) {
+        possibleValues(dataset : dsCountry)
+    }
+
+    chart c1(type: xyChart) {
+        styles (line, area, bubble, scatter)
+        dataset = dsLifeExp
+
+        xAxis (
+            type : int,
+            label : 'Year',
+            format : '####',
+            // formatter : {year -> sprintf("'%02d", ((int)year % 100))},
+            config : { axis ->
+                axis.autoRanging = false
+                axis.lowerBound = 1960
+                axis.upperBound = 2013
+            }
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)',
+            config : { axis ->
+                axis.autoRanging = false
+                axis.forceZeroInRange = true
+                axis.upperBound = 90
+            }
+        )
+
+        series (
+            total : ['calendar_year','life_exp'],
+            male : ['calendar_year','life_exp_male'],
+            female : ['calendar_year','life_exp_female']
+        )
+    }
+}
+
+

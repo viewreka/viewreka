@@ -1,0 +1,165 @@
+datasource dbWB(type : sql) {
+    driver = 'org.apache.derby.jdbc.EmbeddedDriver'
+    connection = "jdbc:derby:jar:(${System.properties['user.dir']}/worldbank-db.zip)worldbank"
+}
+
+view About {
+    chart descr(type : htmlChart) {
+      content = file('wb09.html')
+    }
+}
+
+
+view 'Life expectancy at birth' {
+    dataset dsLifeExp {
+      query = file('lifeExp.sql')
+    }
+
+    dataset dsCountry {
+      query = file('country.sql')
+    }
+
+    dataset dsRegion {
+      query = file('region.sql')
+    }
+
+    dataset dsIncome {
+      query = file('income.sql')
+    }
+
+    parameter prmRegion(type : string) {
+        possibleValues(dataset : dsRegion, valueColumn : 'name', displayedColumn: 'description')
+    }
+
+    parameter prmIncome(type : string) {
+        possibleValues(dataset : dsIncome, valueColumn : 'name', displayedColumn: 'description')
+    }
+
+    parameter prmCountry(type : string) {
+        possibleValues(dataset : dsCountry)
+    }
+
+    chart c1(type: xyChart) {
+        styles (line, area, bubble, scatter)
+        dataset = dsLifeExp
+
+        xAxis (
+            type : int,
+            label : 'Year',
+            format : '####',
+            // formatter : {year -> sprintf("'%02d", ((int)year % 100))},
+            config : { axis ->
+                axis.autoRanging = false
+                axis.lowerBound = 1960
+                axis.upperBound = 2013
+            }
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)',
+            config : { axis ->
+                axis.autoRanging = false
+                axis.forceZeroInRange = true
+                axis.upperBound = 90
+            }
+        )
+
+        series (
+            total : ['calendar_year','life_exp'],
+            male : ['calendar_year','life_exp_male'],
+            female : ['calendar_year','life_exp_female']
+        )
+    }
+}
+
+view 'Aggregated life expectancy (income)' {
+    dataset dsAggrLifeExpIncome {
+      query = file('incomeLifeExp.sql')
+    }
+
+    dataset dsYear {
+      query = 'select distinct calendar_year from ta_indicator where calendar_year between 1960 and 2012'
+    }
+
+    parameter prmYear(type : int) {
+        possibleValues(dataset : dsYear)
+    }
+
+    chart c1(type: xyChart) {
+        styles (bar)
+        dataset = dsAggrLifeExpIncome
+
+        xAxis (
+            type : string,
+            label : 'Gender and income group',
+            categorical : true
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)',
+            config : { axis ->
+                axis.autoRanging = false
+                axis.forceZeroInRange = true
+                axis.upperBound = 90
+            }
+        )
+
+        series (
+            'Low income' : ['exp_type','l'],
+            'Lower middle income' : ['exp_type','lm'],
+            'Upper middle income' : ['exp_type','um'],
+            'High income: nonOECD' : ['exp_type','hno'],
+            'High income: OECD' : ['exp_type','ho'],
+        )
+    }
+}
+
+
+view 'Aggregated life expectancy (region)' {
+    dataset dsAggrLifeExpRegion {
+      query = file('regionLifeExp.sql')
+    }
+
+    dataset dsYear {
+      query = 'select distinct calendar_year from ta_indicator where calendar_year between 1960 and 2012'
+    }
+
+    parameter prmYear(type : int) {
+        possibleValues(dataset : dsYear)
+    }
+
+    chart c1(type: xyChart) {
+        styles (bar)
+        dataset = dsAggrLifeExpRegion
+
+        xAxis (
+            type : string,
+            label : 'Gender and region',
+            categorical : true
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)',
+            config : { axis ->
+                axis.autoRanging = false
+                axis.forceZeroInRange = true
+                axis.upperBound = 90
+            }
+        )
+
+        series (
+            'East Asia & Pacific' : ['exp_type','eap'],
+            'Europe & Central Asia' : ['exp_type','eca'],
+            'Latin America & Caribbean' : ['exp_type','lac'],
+            'Middle East & North Africa' : ['exp_type','mena'],
+            'North America' : ['exp_type','na'],
+            'South Asia' : ['exp_type','sa'],
+            'Sub-Saharan Africa' : ['exp_type','ssa'],
+        )
+    }
+}
+
+

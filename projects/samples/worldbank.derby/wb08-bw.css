@@ -1,0 +1,133 @@
+/*******************************************************************************
+ *                                                                             *
+ * Charts                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart {
+    -fx-padding: 5px;
+    -fx-background-color: white;
+}
+.chart-plot-background {
+    -fx-background-color: white;
+}
+.chart-content {
+    -fx-padding: 10px;
+    -fx-background-color: white;
+}
+.chart-title {
+    -fx-font-size: 2.0em;
+    -fx-font-weight: bold;
+}
+.chart-legend {
+   -fx-background-color: white;
+   -fx-background-insets: 0 0 -1 0, 0,1;
+   -fx-background-radius: 4,4,3;
+   -fx-padding: 6px;
+}
+
+.chart-legend-item-symbol{
+   -fx-background-radius: 0;
+}
+
+.chart-legend-item{
+    -fx-font-size: 1.6em;
+}
+
+.axis-label {
+  -fx-font-size: 1.6em;
+  -fx-font-weight: bold;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Axis                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.axis {
+    AXIS_COLOR: black;
+    -fx-tick-label-font-size: 0.833333em; /* 10px */
+    -fx-tick-label-fill: black;
+}
+.axis:top {
+    -fx-border-color: transparent transparent AXIS_COLOR transparent;
+}
+.axis:right {
+    -fx-border-color: transparent transparent transparent AXIS_COLOR;
+}
+.axis:bottom {
+    -fx-border-color: AXIS_COLOR transparent transparent transparent;
+}
+.axis:left {
+    -fx-border-color: transparent AXIS_COLOR transparent transparent;
+}
+.axis:top > .axis-label,
+.axis:left > .axis-label {
+    -fx-padding: 0 0 4px 0;
+}
+.axis:bottom > .axis-label,
+.axis:right > .axis-label {
+    -fx-padding: 4px 0 0 0;
+}
+.axis-tick-mark {
+    -fx-fill: null;
+    -fx-stroke: AXIS_COLOR;
+    -fx-stroke-width: 3;
+}
+.axis-minor-tick-mark {
+    -fx-fill: null;
+    -fx-stroke: AXIS_COLOR;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * ChartPlot                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart-vertical-grid-lines {
+    -fx-stroke: derive(white,-10%);
+    -fx-stroke-dash-array: 0.25em, 0.25em;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: derive(white,-10%);
+    -fx-stroke-dash-array: 0.25em, 0.25em;
+}
+.chart-alternative-column-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+.chart-alternative-row-fill {
+    -fx-fill: null;
+    -fx-stroke: null;
+}
+.chart-vertical-zero-line,
+.chart-horizontal-zero-line {
+    -fx-stroke: derive(white, 40%);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * LineChart                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.chart-line-symbol {
+    -fx-background-color: black, white;
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+.chart-series-line {
+    -fx-stroke: black;
+    -fx-stroke-width: 3px;
+}
+.default-color0.chart-line-symbol { -fx-background-color: black, white; }
+.default-color1.chart-line-symbol { -fx-background-color: black, white; -fx-background-radius: 0;}
+.default-color2.chart-line-symbol { -fx-background-color: black, white; -fx-background-radius: 0; -fx-padding: 7px 5px 7px 5px; -fx-shape: "M5,0 L10,9 L5,18 L0,9 Z"}
+
+.default-color0.chart-series-line { -fx-stroke: black; }
+.default-color1.chart-series-line { -fx-stroke: black; -fx-stroke-dash-array: 2 2; -fx-stroke-dash-offset: 2; -fx-stroke-line-cap: butt;}
+.default-color2.chart-series-line { -fx-stroke: black; -fx-stroke-dash-array: 4 2; -fx-stroke-dash-offset: 2; -fx-stroke-line-cap: butt;}

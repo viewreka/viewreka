@@ -1,0 +1,81 @@
+<html>
+<body>
+
+<h1>The wb06 project</h1>
+
+<br/><a href="#general">General info</a>
+<br/><a href="#project">Project description</a>
+    <br/><a href="#dataSource"><div style="text-indent: 20px;">Data source</div></a>
+    <a href="#about"><div style="text-indent: 20px;">The <em>About</em> view</div></a>
+    <a href="#lifeExp"><div style="text-indent: 20px;">The <em>Life expectancy at birth</em> view</div></a>
+      <a href="#changes-lifeExp"><div style="text-indent: 40px;">Changes relative to the wb05 project</div></a>
+<a href="#database">Database</a>
+
+<h2 id="general">General info</h2>
+<p/>This project provides charts of the life expectancy at birth by country. Groups of countries can be created by selecting the desired entries in the <em>prmRegion</em> and <em>prmIncome</em> comboboxes.
+Then, the user can select a country from the group by using the <em>prmCountry</em> combobox, as seen below:
+<br/><img src="img/region-income-combo.png"/>
+<br/>It is also possible to manually iterate through the countries by using the arrow buttons or let the program iterate automatically by pressing the <img src="img/media-playback-start.png" style="position:relative; top:10px;"/> button.
+
+<h2 id="project">Project description</h2>
+<h3 id="dataSource">Data source</h3>
+The project declares an SQL data source consisting of an embedded Derby database stored in a zip file located in the project's directory.
+<br/>Because Viewreka sets the value of the system property <em>'user.dir'</em> to the directory of the current project, this property is used in the connection string to locate the database.
+
+<h3 id="about">The <em>About</em> View</h3>
+The <em>About</em> view provides an HTML chart with information about this project. The chart content is retrieved from an external file (and it is the document you are currently reading).
+
+<h3 id="lifeExp">The <em>Life expectancy at birth</em> View</h3>
+The <em>Life expectancy at birth</em> view provides an XY chart based on the dataset <em>dsLifeExp</em>, which is defined by a parameterized query.
+<h4 id="changes-lifeExp">Changes relative to the wb05 project:</h4>
+<ul>
+  <li>The <em>dsRegion</em> dataset, which provides the list of region names, has been introduced.</li>
+  <li>The parameter <em>prmRegion</em> uses the dataset <em>dsRegion</em> in order to specify its possible values.</li>
+  <li>The <em>dsIncome</em> dataset, which provides the list of income groups, has been introduced.</li>
+  <li>The parameter <em>prmIncome</em> uses the dataset <em>dsIncome</em> in order to specify its possible values.</li>
+  <li>Because lists of possible values are available for the parameters <em>prmRegion</em> and <em>prmIncome</em>, the program has replaced their associated text fields with comboboxes.</li>
+  <li>In the wb05 project, it was possible to select all regions and/or all incomes (by using the wildcard <b>%</b>). This is no longer possible in wb06, but it will be possible again in wb07.</li>
+</ul>
+
+<h2 id="database">Database</h2>
+<p/>This project uses a Derby database compiled from data provided by the <a href="http://data.worldbank.org/" target="_blank">World Bank</a>.
+<p/>The database consists of four tables, as seen in the figure below:
+
+<p/><img src="img/schema.png"/>
+
+<p/>Below is a sample of the data contained in these tables:
+
+<p/><table cellspacing="15">
+<tr>
+  <td rowspan="2">
+    <b>TA_COUNTRY</b>
+    <br/><img src="img/ta_country.png"/>
+  </td>
+  <td>
+    <b>TA_REGION</b>
+    <br/><img src="img/ta_region.png"/>
+  </td>
+</tr>
+<tr>
+  <td>
+    <p/><b>TA_INCOME</b>
+    <br/><img src="img/ta_income.png"/>
+  </td>
+</tr>
+<tr>
+  <td colspan="2">
+    <p/><b>TA_INDICATOR</b>
+    <br/><img src="img/ta_indicator.png"/>
+  </td>
+</tr>
+</table>
+
+<p>The database also contains two views that present the data in a user friendly form, as illustrated by the samples below:
+<p/><b>V_COUNTRY</b>
+<br/><img src="img/v_country.png"/>
+
+<p/><b>V_INDICATOR</b>
+<br/><img src="img/v_indicator.png"/>
+
+</body>
+</html>

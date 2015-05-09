@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root fx:id="viewSplitPane" dividerPositions="0.9" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0" minWidth="0" orientation="VERTICAL" type="SplitPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+  <items>
+    <AnchorPane fx:id="chartPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" prefHeight="-1" prefWidth="-1" />
+    <BorderPane fx:id="dashboard" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1" prefWidth="-1">
+      <left>
+        <VBox fx:id="controlPane" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1">
+          <children>
+            <FlowPane fx:id="stylePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+              <children>
+                <Label text="Chart style:">
+                   <FlowPane.margin>
+                      <Insets left="20.0" right="5.0" top="5.0" />
+                   </FlowPane.margin>
+                </Label>
+                <ComboBox fx:id="cmbChartStyle" maxWidth="1.7976931348623157E308" onAction="#updateChartStyle" prefWidth="150.0">
+                   <FlowPane.margin>
+                      <Insets top="5.0" />
+                   </FlowPane.margin>
+                </ComboBox>
+              </children>
+            </FlowPane>
+            <FlowPane hgap="20.0" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" vgap="10.0">
+              <children>
+                <HBox id="HBox" alignment="CENTER" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" spacing="5.0">
+                  <children>
+	                <StackPane fx:id="iteratedParameterStack">
+                      <children>
+                        <HBox fx:id="boxIteratedParameterMulti">
+                          <children>
+                            <Label text="Iterated parameter:">
+                              <padding><Insets top="3.0" /></padding>
+                            </Label>
+                            <ComboBox fx:id="cmbIteratedParameter">
+                              <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Parameter 1" />
+                                  <String fx:value="Parameter 2" />
+                                  <String fx:value="Parameter 3" />
+                                </FXCollections>
+                              </items>
+                            </ComboBox>
+                          </children>
+                        </HBox>
+                        <Label fx:id="lbIteratedParameterSingle" text="Parameter:" />
+                      </children>
+	                </StackPane>
+                    <ComboBox fx:id="cmbIteratedValues">
+                      <items>
+                        <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="Value 1" />
+                          <String fx:value="Value 2" />
+                          <String fx:value="Value 3" />
+                        </FXCollections>
+                      </items>
+                    </ComboBox>
+                  </children>
+                </HBox>
+              </children>
+              <padding>
+                <Insets bottom="10.0" left="20.0" top="20.0" />
+              </padding>
+            </FlowPane>
+            <FlowPane hgap="20.0" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="100.0" vgap="10.0">
+              <children>
+                <Button fx:id="butFirstValue" mnemonicParsing="false" onAction="#showFirst" prefHeight="32.0" prefWidth="32.0" text="" />
+                <Button fx:id="butPreviousValue" mnemonicParsing="false" onAction="#showPrevious" prefHeight="32.0" prefWidth="32.0" text="" />
+                <Button fx:id="butNextValue" mnemonicParsing="false" onAction="#showNext" prefHeight="32.0" prefWidth="32.0" text="" />
+                <Button fx:id="butLastValue" mnemonicParsing="false" onAction="#showLast" prefHeight="32.0" prefWidth="32.0" text="" />
+              </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="88.0" top="20.0" />
+                     </VBox.margin>
+            </FlowPane>
+            <FlowPane hgap="25.0" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" vgap="10.0">
+              <children>
+                <HBox id="HBox" alignment="CENTER" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" spacing="5.0">
+                  <children>
+                    <Label text="Delay:" />
+                    <ComboBox fx:id="cmbDelay" onAction="#updateDelay" prefWidth="107.0">
+                      <items>
+                        <FXCollections fx:factory="observableArrayList">
+                          <String fx:value="100" />
+                        </FXCollections>
+                      </items>
+                    </ComboBox>
+                    <Label text="ms." />
+                  </children>
+                </HBox>
+                <Button fx:id="butPlay" mnemonicParsing="false" onAction="#play" prefHeight="32.0" prefWidth="32.0" styleClass="paused" text="" />
+              </children>
+              <padding>
+                <Insets left="50.0" />
+              </padding>
+            </FlowPane>
+          </children>
+        </VBox>
+      </left>
+      <center>
+        <ScrollPane fx:id="parameterScrollPane" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1">
+          <content>
+            <VBox fx:id="parameterPane" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" spacing="10.0">
+              <padding>
+                <Insets left="10.0" top="20.0" />
+              </padding>
+            </VBox>
+          </content>
+        </ScrollPane>
+      </center>
+    </BorderPane>
+  </items>
+</fx:root>

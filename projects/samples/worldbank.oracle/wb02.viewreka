@@ -1,0 +1,35 @@
+datasource dbWB(type : sql) {
+    driver = 'oracle.jdbc.OracleDriver'
+    connection = 'jdbc:oracle:thin:@localhost:1521:orcl'
+    user = 'WB_SCHEMA'
+    password = 'WB_SCHEMA'
+}
+
+view 'Life expectancy at birth' {
+    dataset dsLifeExp {
+      query = file('lifeExp.sql')
+    }
+
+    parameter prmCountry(type: string)
+
+    chart c1(type: xyChart) {
+
+        dataset = dsLifeExp
+
+        xAxis (
+            type : int,
+            label : 'Year',
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)'
+        )
+
+        series (
+            total : ['calendar_year','life_exp'],
+            male : ['calendar_year','life_exp_male'],
+            female : ['calendar_year','life_exp_female']
+        )
+    }
+}

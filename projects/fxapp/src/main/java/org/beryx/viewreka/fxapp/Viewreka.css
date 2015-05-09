@@ -1,0 +1,57 @@
+#butNewFile {
+     -fx-background-image: url("/icon/file-new.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butOpenFile {
+     -fx-background-image: url("/icon/file-open.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butNewProject {
+     -fx-background-image: url("/icon/project-new.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butOpenProject {
+     -fx-background-image: url("/icon/project-open.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butReloadProject {
+     -fx-background-image: url("/icon/refresh.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butSaveFile {
+     -fx-background-image: url("/icon/save.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butSaveAll {
+     -fx-background-image: url("/icon/save-all.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butStylesheet {
+     -fx-background-image: url("/icon/text-css.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butExportChart {
+     -fx-background-image: url("/icon/export-chart.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butExportVideo {
+     -fx-background-image: url("/icon/export-video.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#tabSourceCode {
+    -fx-font-weight: bold;
+}
+
+#tabHelp {
+    -fx-font-weight: bold;
+}

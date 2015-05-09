@@ -1,0 +1,30 @@
+#butFirstValue {
+     -fx-background-image: url("/icon/arrow-left-double.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butPreviousValue {
+     -fx-background-image: url("/icon/arrow-left.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butNextValue {
+     -fx-background-image: url("/icon/arrow-right.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butLastValue {
+     -fx-background-image: url("/icon/arrow-right-double.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butPlay.paused {
+     -fx-background-image: url("/icon/media-playback-start.png");
+     -fx-background-repeat: no-repeat;
+}
+
+
+#butPlay.playing {
+     -fx-background-image: url("/icon/media-playback-pause.png");
+     -fx-background-repeat: no-repeat;
+}

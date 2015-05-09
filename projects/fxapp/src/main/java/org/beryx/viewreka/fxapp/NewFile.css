@@ -1,0 +1,10 @@
+#lbNewFileHeaderText {
+    -fx-fill: yellow;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+}
+
+#lbNewFileHeaderIcon {
+     -fx-background-image: url("/icon/file-new-48.png");
+     -fx-background-repeat: no-repeat;
+}

@@ -1,0 +1,10 @@
+#lbExportVideoHeaderText {
+    -fx-fill: yellow;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+}
+
+#lbExportVideoHeaderIcon {
+     -fx-background-image: url("/icon/export-video-48.png");
+     -fx-background-repeat: no-repeat;
+}

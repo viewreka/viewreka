@@ -1,0 +1,200 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+repositories {
+  jcenter()
+  mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    repositories {
+      jcenter()
+      mavenCentral()
+    }
+
+    sourceCompatibility = 1.8
+    group = 'org.beryx'
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    configurations {
+      compile {transitive = true}
+    }
+
+    dependencies {
+      compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.+'
+      compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.+'
+
+      testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    }
+
+    jar {
+        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
+        manifest {
+            attributes 'Implementation-Title': "viewreka-${project.archivesBaseName}",
+                    'Implementation-Version': viewrekaVersion,
+                    'Implementation-Vendor-Id': 'beryx.org'
+        }
+
+        from ("${projectDir}/src/main/java") {
+            include('**/*.fxml')
+            include('**/*.css')
+        }
+    }
+
+    task "create-dirs" << {
+       sourceSets*.java.srcDirs*.each { it.mkdirs() }
+       sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+    }
+
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
+        classifier = 'sources'
+        from sourceSets.main.allSource
+
+    }
+
+    artifacts {
+        archives sourcesJar
+    }
+
+    uploadArchives {
+        repositories {
+           flatDir {
+               dirs 'repos'
+           }
+        }
+    }
+
+    ///////////  ECLIPSE //////////////////
+
+    def resourcesDir = 'src/main/resources/'
+    eclipse.classpath.file {
+        beforeMerged { classpath ->
+            classpath.entries.removeAll()
+        }
+        whenMerged { classpath ->
+            classpath.entries.findAll { entry -> entry.kind == 'lib' }*.exported = true
+            classpath.entries.removeAll { entry -> entry.kind == 'src' && entry.path.contains('/resources') }
+            classpath.entries.add(new org.gradle.plugins.ide.eclipse.model.SourceFolder(resourcesDir, null))
+        }
+    }
+
+    eclipse.project {
+        name = 'viewreka.' + project.name
+
+        file.beforeMerged { project ->
+            project.natures.clear()
+        }
+    }
+}
+
+
+project('core') {
+    dependencies {
+        compile 'org.apache.commons:commons-lang3:3.2'
+    }
+}
+
+project('fxui') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project('fxdsl') {
+    sourceSets.main.java.srcDirs = []
+    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
+
+    dependencies {
+        compile project(':fxui')
+
+        compile 'org.codehaus.groovy:groovy-all:2.4.0'
+        compile 'org.apache.commons:commons-io:1.3.2'
+    }
+}
+
+project('fxapp') {
+
+    apply plugin: 'application'
+
+    dependencies {
+        compile project(':fxdsl')
+
+        compile 'org.fxmisc.richtext:richtextfx:0.6.3'
+        compile 'org.jcodec:jcodec:0.1.9'
+    }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'org.beryx.viewreka.fxapp.DslViewrekaApp'
+        }
+    }
+
+    mainClassName = 'org.beryx.viewreka.fxapp.DslViewrekaApp'
+    applicationName = "viewreka"
+
+    startScripts {
+        defaultJvmOpts = ['-Dlogback.configurationFile=../logback.xml']
+    }
+
+    applicationDistribution.from("${rootProject.projectDir}/dist") {
+        filter(ReplaceTokens, tokens:[viewrekaVersion : viewrekaVersion])
+    }
+
+    applicationDistribution.from("${rootProject.projectDir}") {
+        include('samples/**')
+    }
+}
+
+project('ext-samples') {
+    dependencies {
+        compile project(':fxui')
+
+        compile 'org.jfxtras:jfxtras-controls:8.0-r+'
+    }
+}
+
+task clean << {
+    delete 'build'
+    delete fileTree(dir: "samples", include: "**/*.settings.xml")
+}
+
+
+def distribute(String type) {
+    def appName = project(':fxapp').applicationName
+    copy {
+        from project(':fxapp').buildDir.path + '/distributions'
+        into 'build/distributions'
+        include "*.$type"
+        rename { fname -> (fname != "${appName}.$type") ?: "${appName}-${viewrekaVersion}.$type" }
+    }
+}
+
+task distZip(dependsOn: ':fxapp:distZip') << {
+    distribute 'zip'
+}
+
+task distTar(dependsOn: ':fxapp:distTar') << {
+    distribute 'tar'
+}
+
+task assemble(dependsOn: ':fxapp:assemble') << {
+    distribute 'zip'
+    distribute 'tar'
+}
+
+task installDist(dependsOn: ':fxapp:installDist') << {
+    copy {
+        from project(':fxapp').buildDir.path + '/install'
+        into 'build/install'
+   }
+}

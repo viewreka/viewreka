@@ -1,0 +1,10 @@
+.gradle/
+build/
+bin/
+.settings/
+.classpath
+.project
+*.class
+*.log
+*.settings.xml
+_ignore*

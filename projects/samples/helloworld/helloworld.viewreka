@@ -1,0 +1,5 @@
+view hello {
+  chart c1 (type : html) {
+    content = '<h1>Hello, world!</h1>'
+  }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/viewreka.fxapp/src/main/java/org/beryx/viewreka/fxapp/DslViewrekaApp.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.beryx.viewreka.fxapp.DslViewrekaApp"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="viewreka.fxapp"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea&#13;&#10;-Dlogback.debug=true&#13;&#10;-Dlogback.configurationFile=${resource_loc:/viewreka.fxapp/src/main/resources/fxapp-logback.xml}&#13;&#10;-Djavafx.verbose=true&#13;&#10;-XX:+UnlockCommercialFeatures&#13;&#10;-XX:+FlightRecorder"/>
+</launchConfiguration>

@@ -1,0 +1,49 @@
+datasource dbWorld(type : sql) {
+    driver = 'com.mysql.jdbc.Driver'
+    connection = "jdbc:mysql://localhost/world"
+    user = 'root'
+    password = 'root'
+}
+
+view 'Language usage' {
+
+    dataset dsCountry {
+      query = 'select name from country order by name'
+    }
+
+    parameter prmCountry(type : string) {
+        possibleValues(dataset : dsCountry)
+    }
+
+    dataset dsLang {
+      query = file('language.sql')
+    }
+
+
+    chart c1(type: xyChart) {
+        styles (bar, stackedBar)
+        dataset = dsLang
+
+        xAxis (
+            type : string,
+            label : 'Country',
+            categorical : true,
+        )
+
+        yAxis (
+            type : double,
+            label : 'Percent of the population',
+            config : { axis ->
+                axis.autoRanging = false
+                axis.forceZeroInRange = true
+                axis.upperBound = 100
+            }
+        )
+
+        series (
+            'Official languages': ['country','official'],
+            'Unofficial languages' : ['country','unofficial'],
+        )
+    }
+
+}

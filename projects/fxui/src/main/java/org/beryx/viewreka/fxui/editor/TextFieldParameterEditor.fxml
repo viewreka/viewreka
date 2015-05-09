@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root hgap="2.0" prefHeight="-1.0" prefWidth="-1.0" type="FlowPane" vgap="0.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <Label fx:id="lbPrmName" alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="120.0" text="">
+      <FlowPane.margin>
+        <Insets right="2.0" />
+      </FlowPane.margin>
+    </Label>
+    <TextField fx:id="prmText" onAction="#prmEdit" onKeyPressed="#keyPressed" prefWidth="200.0" text="" />
+    <HBox id="HBox" alignment="CENTER" disable="false" spacing="2.0" visible="true">
+      <children>
+        <Button fx:id="butSaveValue" defaultButton="true" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveValue" prefHeight="16.0" prefWidth="16.0" text="" />
+        <Button fx:id="butCancelValue" cancelButton="true" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelValue" prefHeight="16.0" prefWidth="16.0" text="" />
+      </children>
+    </HBox>
+  </children>
+  <padding>
+    <Insets />
+  </padding>
+</fx:root>

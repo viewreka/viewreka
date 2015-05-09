@@ -1,0 +1,28 @@
+#butSaveValue {
+     -fx-background-image: url("/icon/edit-accept.png");
+     -fx-background-repeat: no-repeat;
+}
+
+#butCancelValue {
+     -fx-background-image: url("/icon/edit-delete.png");
+     -fx-background-repeat: no-repeat;
+}
+
+.input-changed-invalid {
+/*
+	-fx-text-fill: red;
+*/
+	-fx-background-color: #FFA0A0;
+}
+
+.input-changed-valid {
+	-fx-background-color: #A0FF80;
+}
+
+.input-unchanged-invalid {
+	-fx-background-color: #FFE0E0;
+}
+
+.input-unchanged-valid {
+	-fx-background-color: #FFFFFF;
+}

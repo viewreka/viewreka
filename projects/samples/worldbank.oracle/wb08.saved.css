@@ -1,0 +1,71 @@
+.chart {
+    -fx-padding: 5px;
+    -fx-background-image: url("http://upload.wikimedia.org/wikipedia/en/thumb/7/74/World_Bank_logo.png/330px-World_Bank_logo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position:top left;
+    -fx-background-size: 220px;
+}
+.chart-content {
+    -fx-padding: 30px;
+}
+
+.chart-title {
+  -fx-text-fill: #4682b4;
+  -fx-font-size: 2.0em;
+  -fx-font-weight: bold;
+}
+
+.axis-label {
+  -fx-text-fill: #4682b4;
+  -fx-font-size: 1.6em;
+  -fx-font-weight: bold;
+}
+
+.chart-legend {
+   -fx-background-color: transparent;
+   -fx-padding: 20px;
+}
+
+.chart-legend-item-symbol{
+   -fx-background-radius: 0;
+}
+
+.chart-legend-item{
+    -fx-text-fill: #191970;
+    -fx-font-size: 1.6em;
+}
+
+.chart-plot-background {
+    -fx-background-color: #f8f8ff;
+}
+.chart-vertical-grid-lines {
+    -fx-stroke: #3278fa;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: #3278fa;
+}
+.chart-alternative-row-fill {
+    -fx-fill: #f4f4ff;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}
+.axis-tick-mark {
+    -fx-stroke: #637040;
+    -fx-stroke-width: 3;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: #859656;
+}.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+
+/*
+.default-color0.chart-series-line { -fx-stroke: #e9967a; }
+.default-color1.chart-series-line { -fx-stroke: #f0e68c; }
+.default-color2.chart-series-line { -fx-stroke: #dda0dd; }
+
+.default-color0.chart-line-symbol { -fx-background-color: #e9967a, white; }
+.default-color1.chart-line-symbol { -fx-background-color: #f0e68c, white; }
+.default-color2.chart-line-symbol { -fx-background-color: #dda0dd, white; }
+*/

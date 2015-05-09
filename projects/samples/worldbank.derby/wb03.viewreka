@@ -1,0 +1,44 @@
+datasource dbWB(type : sql) {
+    driver = 'org.apache.derby.jdbc.EmbeddedDriver'
+    connection = "jdbc:derby:jar:(${System.properties['user.dir']}/worldbank-db.zip)worldbank"
+}
+
+view About {
+    chart descr(type : htmlChart) {
+      content = file('wb03.html')
+    }
+}
+
+view lifeExpectancy {
+    dataset dsLifeExp {
+      query = file('lifeExp.sql')
+    }
+
+    dataset dsCountry {
+      query = 'select name from ta_country order by name'
+    }
+
+    parameter prmCountry(type: string) {
+        possibleValues(dataset : dsCountry)
+    }
+
+    chart c1(type: xyChart) {
+        dataset = dsLifeExp
+
+        xAxis (
+            type : int,
+            label : 'Year',
+        )
+
+        yAxis (
+            type : double,
+            label : 'Life expectancy (years)'
+        )
+
+        series (
+            total : ['calendar_year','life_exp'],
+            male : ['calendar_year','life_exp_male'],
+            female : ['calendar_year','life_exp_female']
+        )
+    }
+}
