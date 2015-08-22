@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/viewreka/viewreka/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/viewreka/viewreka/master.svg?label=Build)](https://travis-ci.org/viewreka/viewreka)
 ## VIEWREKA ##
 
 Viewreka is a script-based data visualization tool built on JavaFX. It introduces a Groovy-based domain-specific language (DSL) for configuring your projects. Viewreka lets you create dynamic, interactive and animated charts using data retrieved from various data sources.
