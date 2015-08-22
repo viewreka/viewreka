@@ -35,14 +35,6 @@ public class NewProjectTest extends Specification {
         path      | valid
         null      | false
         ""        | false
-        "?"       | false
-        "*"       | false
-        "a*"      | false
-        "a?"      | false
-        "?a"      | false
-        "*a"      | false
-        "?*"      | false
-        "*?"      | false
         ".."      | true
         "../.."   | true
         "aaa"     | true
