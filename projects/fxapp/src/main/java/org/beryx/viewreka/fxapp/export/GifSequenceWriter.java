@@ -20,6 +20,10 @@ import java.awt.image.*;
 import java.io.*;
 import java.util.Iterator;
 
+/**
+ * Helper class for writing animated GIFs.
+ * <br/>Adapted from <a href="http://elliot.kroo.net/software/java/GifSequenceWriter">Elliot Kroo's Animated GIF Writer</a>.
+ */
 public class GifSequenceWriter {
 	protected ImageWriter gifWriter;
 	protected ImageWriteParam imageWriteParam;
@@ -105,9 +109,8 @@ public class GifSequenceWriter {
 		Iterator<ImageWriter> iter = ImageIO.getImageWritersBySuffix("gif");
 		if(!iter.hasNext()) {
 			throw new IIOException("No GIF Image Writers Exist");
-		} else {
-			return iter.next();
 		}
+		return iter.next();
 	}
 
 	/**

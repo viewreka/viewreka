@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Default implementation of the {@link GuiSettings} interface.
+ */
 public class GuiSettingsImpl implements GuiSettings {
 	private double x = 10;
 	private double y = 10;
@@ -63,6 +66,9 @@ public class GuiSettingsImpl implements GuiSettings {
 		return recentProjectPaths;
 	}
 
+	/**
+	 * @param recentProjectPaths the list of the file paths of recently opened Viewreka project script files
+	 */
 	public void setRecentProjectPaths(List<String> recentProjectPaths) {
 		this.recentProjectPaths = recentProjectPaths;
 	}
@@ -92,6 +98,9 @@ public class GuiSettingsImpl implements GuiSettings {
 		return properties;
 	}
 
+	/**
+	 * @param properties the map of property values indexed by their names
+	 */
 	public void setProperties(Map<String, Serializable> properties) {
 		this.properties = properties;
 	}

@@ -2,6 +2,13 @@ package org.beryx.viewreka.sql;
 
 import java.sql.Connection;
 
+/**
+ * An SQL {@link Connection} provider.
+ */
 public interface SqlConnectionProvider extends AutoCloseable {
-	Connection getConnection();
+    /**
+     * Retrieves an SQL {@link Connection}.
+     * @return the SQL connection
+     */
+    Connection getConnection();
 }

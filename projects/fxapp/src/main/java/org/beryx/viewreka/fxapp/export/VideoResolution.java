@@ -1,5 +1,8 @@
 package org.beryx.viewreka.fxapp.export;
 
+/**
+ * Enum for video resolution values.
+ */
 public enum VideoResolution {
 	R_640_360(640, 360),
 	R_720_480(720, 480),

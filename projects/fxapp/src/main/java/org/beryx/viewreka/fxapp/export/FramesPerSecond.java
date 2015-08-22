@@ -1,5 +1,8 @@
 package org.beryx.viewreka.fxapp.export;
 
+/**
+ * Enum with predefined frames-per-second values.
+ */
 public enum FramesPerSecond {
 	FPS_24(24),
 	FPS_25(25),

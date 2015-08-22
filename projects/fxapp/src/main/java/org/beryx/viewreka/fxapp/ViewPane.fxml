@@ -77,15 +77,15 @@
                 <Button fx:id="butLastValue" mnemonicParsing="false" onAction="#showLast" prefHeight="32.0" prefWidth="32.0" text="" />
               </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" left="88.0" top="20.0" />
+                        <Insets bottom="10.0" left="109.0" top="20.0" />
                      </VBox.margin>
             </FlowPane>
             <FlowPane hgap="25.0" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" vgap="10.0">
               <children>
-                <HBox id="HBox" alignment="CENTER" minHeight="0" minWidth="0" prefHeight="-1" prefWidth="-1" spacing="5.0">
+                <HBox id="HBox" alignment="CENTER_LEFT" minHeight="0" minWidth="0" spacing="5.0">
                   <children>
-                    <Label text="Delay:" />
-                    <ComboBox fx:id="cmbDelay" onAction="#updateDelay" prefWidth="107.0">
+                    <Label text="Frame duration:" />
+                    <ComboBox fx:id="cmbFrameDuration" onAction="#updateChartFrameDuration" prefWidth="107.0">
                       <items>
                         <FXCollections fx:factory="observableArrayList">
                           <String fx:value="100" />
@@ -98,7 +98,7 @@
                 <Button fx:id="butPlay" mnemonicParsing="false" onAction="#play" prefHeight="32.0" prefWidth="32.0" styleClass="paused" text="" />
               </children>
               <padding>
-                <Insets left="50.0" />
+                <Insets left="20.0" />
               </padding>
             </FlowPane>
           </children>

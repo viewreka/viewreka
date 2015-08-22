@@ -3,6 +3,9 @@
  */
 package org.beryx.viewreka.fxapp.codearea;
 
+/**
+ * Specialization of {@link SimpleCodeArea} for Java content.
+ */
 public class JavaCodeArea extends SimpleCodeArea {
     private static final String[] KEYWORDS = new String[] {
         "abstract", "assert", "boolean", "break", "byte",
@@ -20,6 +23,6 @@ public class JavaCodeArea extends SimpleCodeArea {
     public static final CodeAreaConfig CONFIG = new CodeAreaConfig().withCaseInsensitive(false).withKeywords(KEYWORDS);
 
     public JavaCodeArea() {
-    	applyConfiguration(CONFIG);
+        applyConfiguration(CONFIG);
     }
 }

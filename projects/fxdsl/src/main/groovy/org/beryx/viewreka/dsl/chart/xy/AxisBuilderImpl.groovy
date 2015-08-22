@@ -23,6 +23,9 @@ import javafx.scene.chart.NumberAxis
 import javafx.scene.chart.ValueAxis
 import javafx.scene.chart.CategoryAxis
 
+/**
+ * Implementation of the {@link AxisBuilder} interface.
+ */
 @Slf4j
 class AxisBuilderImpl<Q,A> implements AxisBuilder<Q,A> {
 	String label

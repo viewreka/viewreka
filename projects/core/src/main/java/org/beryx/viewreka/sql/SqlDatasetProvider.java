@@ -10,87 +10,94 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.beryx.viewreka.core.ViewrekaException;
-import org.beryx.viewreka.model.Dataset;
 import org.beryx.viewreka.model.DatasetProvider;
 import org.beryx.viewreka.parameter.ParameterGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A provider that offers an {@link SqlDataset}.
+ */
 public class SqlDatasetProvider implements DatasetProvider {
-	private static final Logger log = LoggerFactory.getLogger(SqlDatasetProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(SqlDatasetProvider.class);
 
-	private final String name;
-	private final SqlConnectionProvider connectionProvider;
-	private final SqlQuery query;
-	private final ParameterGroup globalParameterGroup;
+    private final String name;
+    private final SqlConnectionProvider connectionProvider;
+    private final SqlQuery query;
+    private final ParameterGroup globalParameterGroup;
 
-	private boolean dirty = true;
-	private SqlDataset cachedDataset = null;
-	private final List<Consumer<DatasetProvider>> dirtyListeners = new ArrayList<>();
+    private boolean dirty = true;
+    private SqlDataset cachedDataset = null;
+    private final List<Consumer<DatasetProvider>> dirtyListeners = new ArrayList<>();
 
-	public SqlDatasetProvider(String name, SqlConnectionProvider connectionProvider, SqlQuery query, ParameterGroup globalParameterGroup) {
-		this.name = name;
-		this.connectionProvider = connectionProvider;
-		this.query = query;
-		this.globalParameterGroup = globalParameterGroup;
-	}
+    /**
+     * Constructs an SQL dataset provider
+     * @param name the name of this dataset provider
+     * @param connectionProvider the provider used to create an SQL {@link Connection}
+     * @param query the {@link SqlQuery} used for creating a dataset
+     * @param globalParameterGroup the parameter group containing the query parameters
+     */
+    public SqlDatasetProvider(String name, SqlConnectionProvider connectionProvider, SqlQuery query, ParameterGroup globalParameterGroup) {
+        this.name = name;
+        this.connectionProvider = connectionProvider;
+        this.query = query;
+        this.globalParameterGroup = globalParameterGroup;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public Set<String> getParameterNames() {
-		return query.getParameterNames();
-	}
+    @Override
+    public Set<String> getParameterNames() {
+        return query.getParameterNames();
+    }
 
-	@Override
-	public synchronized void setDirty() {
-		log.trace("Setting dirty: {} {}", name, query);
-		this.dirty = true;
-		dirtyListeners.forEach(listener -> listener.accept(this));
-	}
+    @Override
+    public synchronized void setDirty() {
+        log.trace("Setting dirty: {} {}", name, query);
+        this.dirty = true;
+        dirtyListeners.forEach(listener -> listener.accept(this));
+    }
 
-	@SuppressWarnings("resource")
-	@Override
-	public synchronized Dataset getDataset() {
-		if(dirty || (cachedDataset == null)) {
-			if(cachedDataset != null) {
-				cachedDataset.close();
-			}
+    @SuppressWarnings("resource")
+    @Override
+    public synchronized SqlDataset getDataset() {
+        if(dirty || (cachedDataset == null) || cachedDataset.isClosed()) {
+            if(cachedDataset != null) {
+                cachedDataset.close();
+            }
+            try {
+                Connection connection = connectionProvider.getConnection();
+                PreparedStatement statement = query.getPreparedStatement(connection, globalParameterGroup);
+                ResultSet rs = statement.executeQuery();
+                cachedDataset = new SqlDataset(name, rs, query.getParameterNames(), statement);
+                dirty = false;
+            } catch (SQLException e) {
+                throw new ViewrekaException("Failed to retrieve the dataset for: " + query, e);
+            }
+        }
+        return cachedDataset;
+    }
 
-			PreparedStatement statement = null;
-			try {
-				Connection connection = connectionProvider.getConnection();
-				statement = query.getPreparedStatement(connection, globalParameterGroup);
-				ResultSet rs = statement.executeQuery();
-				cachedDataset = new SqlDataset(name, rs, query.getParameterNames(), statement);
-				dirty = false;
-			} catch (SQLException e) {
-				throw new ViewrekaException("Failed to retrieve the dataset for: " + query, e);
-			}
-		}
-		return cachedDataset;
-	}
+    @Override
+    public boolean addDirtyListener(Consumer<DatasetProvider> listener) {
+        return dirtyListeners.add(listener);
+    }
 
-	@Override
-	public boolean addDirtyListener(Consumer<DatasetProvider> listener) {
-		return dirtyListeners.add(listener);
-	}
+    @Override
+    public boolean removeDirtyListener(Consumer<DatasetProvider> listener) {
+        return dirtyListeners.remove(listener);
+    }
 
-	@Override
-	public boolean removeDirtyListener(Consumer<DatasetProvider> listener) {
-		return dirtyListeners.remove(listener);
-	}
+    @Override
+    public void close() throws Exception {
+        connectionProvider.close();
+    }
 
-	@Override
-	public void close() throws Exception {
-		connectionProvider.close();
-	}
-
-	@Override
-	public String toString() {
-		return name + ": " + getParameterNames();
-	}
+    @Override
+    public String toString() {
+        return name + ": " + getParameterNames();
+    }
 }

@@ -26,6 +26,11 @@ import org.beryx.viewreka.chart.ChartController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A controller for an XY chart
+ * @param <X> the type of the X axis
+ * @param <Y> the type of the Y axis
+ */
 public class XYChartController<X, Y> implements ChartController<XYChartData<X,Y>> {
 	private static final Logger log = LoggerFactory.getLogger(XYChartController.class);
 
@@ -38,6 +43,14 @@ public class XYChartController<X, Y> implements ChartController<XYChartData<X,Y>
 	private final StackPane stackPane = new StackPane();
 	private final XYChart<X, Y> chart;
 
+	/**
+	 * @param chartParentPane the parent pane of the chart handled by this controller
+	 * @param seriesConfigMap the map of series configurations
+	 * @param seriesDataBuilder the series data builder
+	 * @param chartCreator the builder responsible for creating the chart handled by this controller
+	 * @param titleSupplier the supplier of the chart title
+	 * @param stylesheetSupplier the supplier of the stylesheet used by the chart handled by this controller
+	 */
 	public XYChartController(Pane chartParentPane, Map<String, SeriesConfig<X, Y>> seriesConfigMap,
 			SeriesDataBuilder<X, Y> seriesDataBuilder, XYChartCreator chartCreator, Supplier<String> titleSupplier, Supplier<String> stylesheetSupplier) {
 		this.seriesConfigMap = seriesConfigMap;

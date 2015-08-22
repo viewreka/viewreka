@@ -1,16 +1,16 @@
 package org.beryx.viewreka.dsl.chart.xy
 
 import static org.beryx.viewreka.core.Util.requireNonNull
-import groovy.lang.Closure;
 
-import java.util.Map;
-
-import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder;
-import org.beryx.viewreka.fxui.chart.FxChartBuilder;
+import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
+import org.beryx.viewreka.fxui.chart.FxChartBuilder
 import org.beryx.viewreka.fxui.chart.xy.XYChartBuilder
 import org.beryx.viewreka.model.DatasetProvider
 import org.beryx.viewreka.parameter.Parameter
 
+/**
+ * A builder for {@link XYChartBuilder}s.
+ */
 class XYChartBuilderBuilder implements FxChartBuilderBuilder {
 	@Override
 	public <X,Y> XYChartBuilder<X,Y> build(String chartName, Closure closure, Parameter<?> chartParameter, Map<String, DatasetProvider> currentDataSetProviders) {

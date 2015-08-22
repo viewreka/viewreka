@@ -4,11 +4,14 @@ import groovy.util.logging.Slf4j
 import javafx.scene.chart.XYChart.Data
 
 import org.beryx.viewreka.fxui.chart.xy.AxisBuilder
-import org.beryx.viewreka.fxui.chart.xy.SeriesConfig;
+import org.beryx.viewreka.fxui.chart.xy.SeriesConfig
 import org.beryx.viewreka.fxui.chart.xy.SeriesDataBuilder
 import org.beryx.viewreka.model.Dataset
 import org.beryx.viewreka.parameter.Parameter
 
+/**
+ * Implementation of the {@link SeriesDataBuilder} interface.
+ */
 @Slf4j
 class SeriesDataBuilderImpl<X,Y> implements SeriesDataBuilder<X,Y> {
 	AxisBuilder<?, X> xAxisBuilder
@@ -45,22 +48,22 @@ class SeriesDataBuilderImpl<X,Y> implements SeriesDataBuilder<X,Y> {
 		Class xQueryResultClass = cfg.XColumnType ?: xAxisBuilder.getDefaultQueryResultType()
 		Class yQueryResultClass = cfg.YColumnType ?: yAxisBuilder.getDefaultQueryResultType()
 		Dataset dataset = cfg.datasetProvider.dataset
-		int itemCount = dataset.getItemCount();
-		for(int i=0; i<itemCount; i++) {
+		int rowCount = dataset.getRowCount();
+		for(int row=0; row<rowCount; row++) {
 			Object xQueryVal = (cfg.XColumn < 0)
-					? dataset.getValue(cfg.XColumnName, i, xQueryResultClass)
-					: dataset.getValue(cfg.XColumn, i, xQueryResultClass)
+					? dataset.getValue(row, cfg.XColumnName, xQueryResultClass)
+					: dataset.getValue(row, cfg.XColumn, xQueryResultClass)
 			if(xQueryVal == null) {
-				log.error("xQueryVal is null for column ${cfg.XColumn}, item $i of dataset: $dataset");
+				log.error("xQueryVal is null for row $row, column ${cfg.XColumn} of dataset: $dataset");
 				continue;
 			}
 			X xVal = cfg.XDataConverter ? cfg.XDataConverter.apply(xQueryVal) : xAxisBuilder?.defaultDataConverter.apply(xQueryVal)
 
 			Object yQueryVal = (cfg.YColumn < 0)
-					? dataset.getValue(cfg.YColumnName, i, yQueryResultClass)
-					: dataset.getValue(cfg.YColumn, i, yQueryResultClass)
+					? dataset.getValue(row, cfg.YColumnName, yQueryResultClass)
+					: dataset.getValue(row, cfg.YColumn, yQueryResultClass)
 			if(yQueryVal == null) {
-				log.error("yQueryVal is null for column ${cfg.YColumn}, item $i of dataset: $dataset");
+				log.error("yQueryVal is null for row $row, column ${cfg.YColumn} of dataset: $dataset");
 				continue;
 			}
 			Y yVal = cfg.YDataConverter ? cfg.YDataConverter.apply(yQueryVal) : yAxisBuilder?.defaultDataConverter.apply(yQueryVal)
@@ -68,10 +71,10 @@ class SeriesDataBuilderImpl<X,Y> implements SeriesDataBuilder<X,Y> {
 
 			// TODO - extraConverter
 			Object extraVal = (cfg.extraColumn >= 0)
-				? dataset.getObject(cfg.extraColumn, i)
+				? dataset.getObject(row, cfg.extraColumn)
 				: (cfg.extraColumnName == null)
 				? null
-				: dataset.getObject(cfg.extraColumnName, i);
+				: dataset.getObject(row, cfg.extraColumnName);
 			if(extraVal instanceof Number) {
 				extraVal = 100.0 * ((Number)extraVal).doubleValue();
 			}

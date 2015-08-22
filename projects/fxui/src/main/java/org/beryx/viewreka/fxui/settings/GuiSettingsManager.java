@@ -2,6 +2,9 @@ package org.beryx.viewreka.fxui.settings;
 
 import org.beryx.viewreka.settings.SettingsManagerImpl;
 
+/**
+ * An extension of {@link SettingsManagerImpl} for handling GUI settings.
+ */
 public class GuiSettingsManager extends SettingsManagerImpl<GuiSettings> {
 
 	public GuiSettingsManager() {
@@ -15,11 +18,11 @@ public class GuiSettingsManager extends SettingsManagerImpl<GuiSettings> {
 		}
 		return dirPath;
 	}
-	
+
 	private static String getSettingsFileName() {
 		return System.getProperty("viewreka.settings.file", "config.xml");
 	}
-	
+
 	@Override
 	protected GuiSettings createNewSettings() {
 		return new GuiSettingsImpl();

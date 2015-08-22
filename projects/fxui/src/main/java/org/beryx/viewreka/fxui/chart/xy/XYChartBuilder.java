@@ -9,11 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javafx.scene.chart.XYChart;
 import javafx.scene.layout.Pane;
 
 import org.beryx.viewreka.chart.ChartController;
+import org.beryx.viewreka.fxui.chart.AbstractFxChartBuilder;
 
-public class XYChartBuilder<X,Y> extends AbstractChartBuilder<XYChartData<X,Y>> {
+/**
+ * A chart builder for {@link XYChart}s.
+ * @param <X> the type of the X axis
+ * @param <Y> the type of the Y axis
+ */
+public class XYChartBuilder<X,Y> extends AbstractFxChartBuilder<XYChartData<X,Y>> {
 	private SeriesDataBuilder<X, Y> seriesDataBuilder;
 	private final Map<String, XYChartCreator> chartCreators = new LinkedHashMap<>();
 
@@ -39,9 +46,15 @@ public class XYChartBuilder<X,Y> extends AbstractChartBuilder<XYChartData<X,Y>> 
 		return new XYChartController<>(chartParentPane, seriesConfigMap, seriesDataBuilder, chartCreator, getTitleSupplier(), getStylesheetSupplier());
 	}
 
+	/**
+	 * @return the builder used to create series data and the X and Y axes
+	 */
 	public SeriesDataBuilder<X, Y> getSeriesDataBuilder() {
 		return seriesDataBuilder;
 	}
+	/**
+	 * @param seriesDataBuilder the builder used to create series data and the X and Y axes
+	 */
 	public void setSeriesDataBuilder(SeriesDataBuilder<X, Y> seriesDataBuilder) {
 		this.seriesDataBuilder = seriesDataBuilder;
 	}
@@ -50,9 +63,19 @@ public class XYChartBuilder<X,Y> extends AbstractChartBuilder<XYChartData<X,Y>> 
 	public List<String> getChartStyles() {
 		return new ArrayList<>(chartCreators.keySet());
 	}
+
+	/**
+	 * Retrieves the chart creators
+	 * @return a map of {@link XYChartCreator}s indexed by their names
+	 */
 	public Map<String, XYChartCreator> getChartCreators() {
 		return chartCreators;
 	}
+
+	/**
+	 * Retrieves the map of chart series configurations.
+	 * @return a map of {@link SeriesConfig}s indexed by their names
+	 */
 	public Map<String, SeriesConfig<X, Y>> getSeriesConfigMap() {
 		return seriesConfigMap;
 	}

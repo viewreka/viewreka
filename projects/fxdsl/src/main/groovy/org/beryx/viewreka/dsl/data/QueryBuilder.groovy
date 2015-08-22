@@ -1,11 +1,9 @@
 package org.beryx.viewreka.dsl.data
 
-import groovy.lang.Closure;
-
-import java.util.Map;
-
-import org.beryx.viewreka.model.Query;
-
+import org.beryx.viewreka.model.Query
+/**
+ * Builder interface for creating queries.
+ */
 interface QueryBuilder {
-	def Query build(String name, Closure dsClosure);
+    def Query build(String name, Closure dsClosure);
 }

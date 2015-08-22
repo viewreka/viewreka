@@ -1,6 +1,6 @@
 package org.beryx.viewreka.dsl.chart.xy
 
-import groovy.transform.ToString;
+import groovy.transform.ToString
 import javafx.scene.chart.AreaChart
 import javafx.scene.chart.Axis
 import javafx.scene.chart.BarChart
@@ -18,6 +18,9 @@ import org.beryx.viewreka.fxui.chart.xy.XYChartBuilder
 import org.beryx.viewreka.fxui.chart.xy.XYChartCreator
 import org.beryx.viewreka.model.DatasetProvider
 
+/**
+ * The closure delegate used by a {@link XYChartBuilderBuilder}.
+ */
 @ToString
 class XYChartDelegate extends BaseDelegate {
 	final String name

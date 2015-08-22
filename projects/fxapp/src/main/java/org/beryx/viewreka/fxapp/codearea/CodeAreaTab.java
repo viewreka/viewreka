@@ -13,37 +13,40 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 
 import org.apache.commons.io.FilenameUtils;
-import org.beryx.viewreka.fxui.FXMLControl;
+import org.beryx.viewreka.fxui.FXMLNode;
 
-public class CodeAreaTab extends Tab implements FXMLControl {
-	private final File file;
-	private final String initialFileText;
+/**
+ * A {@link Tab} containing a {@link SimpleCodeArea}.
+ */
+public class CodeAreaTab extends Tab implements FXMLNode {
+    private final File file;
+    private final String initialFileText;
 
-	@FXML private SimpleCodeArea codeArea;
+    @FXML private SimpleCodeArea codeArea;
 
-	public static CodeAreaTab fromFile(File file) throws IOException {
-		CodeAreaTab tab = new CodeAreaTab(file).load();
-		return tab;
-	}
+    public static CodeAreaTab fromFile(File file) throws IOException {
+        CodeAreaTab tab = new CodeAreaTab(file).load();
+        return tab;
+    }
 
-	private CodeAreaTab(File file) throws IOException {
-		this.file = file;
-		this.initialFileText = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
-	}
+    private CodeAreaTab(File file) throws IOException {
+        this.file = file;
+        this.initialFileText = new String(Files.readAllBytes(Paths.get(file.getAbsolutePath())));
+    }
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		check("codeArea", codeArea);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        check("codeArea", codeArea);
 
-		CodeAreaConfig config = FileAssociations.INSTANCE.getConfig(FilenameUtils.getExtension(file.getName()));
-		codeArea.applyConfiguration(config);
+        CodeAreaConfig config = FileAssociations.INSTANCE.getConfig(FilenameUtils.getExtension(file.getName()));
+        codeArea.applyConfiguration(config);
 
-		this.setText(file.getName());
-		CodeTabData data = getData(this);
-		data.setFilePath(file.getAbsolutePath());
-		data.setInitialText(initialFileText);
-		data.setTextProperty(codeArea.textProperty());
+        this.setText(file.getName());
+        CodeTabData data = getData(this);
+        data.setFilePath(file.getAbsolutePath());
+        data.setInitialText(initialFileText);
+        data.setTextProperty(codeArea.textProperty());
 
-		codeArea.setText(initialFileText);
-	}
+        codeArea.setText(initialFileText);
+    }
 }

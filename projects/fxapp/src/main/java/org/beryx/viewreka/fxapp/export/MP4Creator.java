@@ -1,5 +1,5 @@
 /**
- * Inspired by (and using code from) jcodec samples (https://github.com/jcodec/jcodec)
+ * Inspired by (and using code from) jcodec samples (https://github.com/jcodec/jcodec), which is distributed under Free BSD license.
  */
 package org.beryx.viewreka.fxapp.export;
 
@@ -30,6 +30,10 @@ import org.jcodec.scale.RgbToYuv420p;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Helper class for creating MP4 files.
+ * <br/>Inspired by (and using code from) <a href="https://github.com/jcodec/jcodec">jcodec samples</a>
+ */
 public class MP4Creator {
 	private static final Logger log = LoggerFactory.getLogger(MP4Creator.class);
 
