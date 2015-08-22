@@ -14,4 +14,6 @@ cache:
   directories:
     - $HOME/.gradle
 
-script: ./projects/gradlew build
+script:
+  - cd projects
+  - ./gradlew build
