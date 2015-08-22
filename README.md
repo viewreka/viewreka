@@ -12,7 +12,7 @@ Download [the latest release](https://github.com/viewreka/viewreka/releases/down
 
 Make sure your `JAVA_HOME` environment variable correctly points to a JDK 8u40 or later.
 
-Start the GUI by executing 'viewreka.sh' or 'viewreka.bat' in the `bin` directory .
+Start the GUI by executing 'viewreka' or 'viewreka.bat' in the `bin` directory .
 
 In the GUI, open the sample projects found in the directory `samples/worldbank.derby`. The projects are numbered in increasing order of complexity. It is recommended to start with the simplest one (`wb01.viewreka`) and progress incrementally to more complex projects. However, if you're really impatient, go straight to the `wb09.viewreka` project, which is the most complex one.
 
