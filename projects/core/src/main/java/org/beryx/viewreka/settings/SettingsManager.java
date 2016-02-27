@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 /** A settings manager is responsible for retrieving and saving settings, as well as for notifying registered listeners about the creation of new settings.
  * @param <T> the type of the settings structure handled by this manager
  */
-public interface SettingsManager<T> {
+public interface SettingsManager<T extends Settings> {
     /**
      * Retrieves the settings handled by this manager.
      * @return the settings handled by this manager

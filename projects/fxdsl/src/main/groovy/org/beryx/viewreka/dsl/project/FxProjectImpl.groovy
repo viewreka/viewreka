@@ -1,4 +1,6 @@
 package org.beryx.viewreka.dsl.project
+
+import org.beryx.viewreka.bundle.api.ViewrekaBundle
 import org.beryx.viewreka.core.ViewrekaException
 import org.beryx.viewreka.fxui.FxProject
 import org.beryx.viewreka.fxui.FxView
@@ -17,9 +19,10 @@ import static org.beryx.viewreka.core.Util.requireNonNull;
  * Implementation of {@link FxProject}.
  */
 public class FxProjectImpl extends ProjectModelImpl<FxView> implements FxProject {
-    def SettingsManager<ProjectSettings> projectSettingsManager;
-    def File scriptFile = null;
-    def List<ScriptIssue> scriptIssues = []
+    SettingsManager<ProjectSettings> projectSettingsManager;
+    File scriptFile = null;
+    List<ScriptIssue> scriptIssues = []
+    List<ViewrekaBundle> bundles = []
 
     private String initialScriptText = "";
 

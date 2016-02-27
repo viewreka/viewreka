@@ -11,7 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
-import org.beryx.viewreka.fxui.Dialogs;
+import org.beryx.viewreka.fxcommons.Dialogs;
 import org.beryx.viewreka.parameter.Parameter;
 import org.beryx.viewreka.parameter.Parameter.Value;
 import org.slf4j.Logger;

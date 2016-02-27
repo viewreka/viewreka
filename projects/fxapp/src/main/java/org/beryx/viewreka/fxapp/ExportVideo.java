@@ -43,19 +43,22 @@ import org.beryx.viewreka.fxapp.export.FramesPerSecond;
 import org.beryx.viewreka.fxapp.export.GifSequenceWriter;
 import org.beryx.viewreka.fxapp.export.MP4Creator;
 import org.beryx.viewreka.fxapp.export.VideoResolution;
-import org.beryx.viewreka.fxui.Dialogs;
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.Dialogs;
+import org.beryx.viewreka.fxcommons.FXMLNode;
 import org.beryx.viewreka.fxui.chart.FxChartBuilder;
+import org.beryx.viewreka.fxui.settings.FxPropsAwareWindow;
+import org.beryx.viewreka.fxui.settings.FxPropsManager;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
+import org.beryx.viewreka.fxui.settings.GuiSettingsManager;
 import org.beryx.viewreka.parameter.Parameter;
 
 /**
  * A dialog for exporting chart animations as MP4s or animated GIFs.
  */
-public class ExportVideo extends GridPane implements FXMLNode {
+public class ExportVideo extends GridPane implements FXMLNode, FxPropsAwareWindow {
     public static final String PROP_VIDEO_EXPORT_DIR = "video.export.dir";
 
-    private final GuiSettings guiSettings;
+    private final GuiSettingsManager guiSettingsManager;
     private final FxChartBuilder<?> chartBuilder;
     private final Parameter<?> iteratedParameter;
     private final long chartFrameDurationMillis;
@@ -76,12 +79,12 @@ public class ExportVideo extends GridPane implements FXMLNode {
     @FXML Button butExport;
 
 
-    public static ExportVideo createWith(GuiSettings guiSettings, FxChartBuilder<?> chartBuilder, Parameter<?> iteratedParameter, long chartFrameDurationMillis) {
-        return new ExportVideo(guiSettings, chartBuilder, iteratedParameter, chartFrameDurationMillis).load();
+    public static ExportVideo createWith(GuiSettingsManager guiSettingsManager, FxChartBuilder<?> chartBuilder, Parameter<?> iteratedParameter, long chartFrameDurationMillis) {
+        return new ExportVideo(guiSettingsManager, chartBuilder, iteratedParameter, chartFrameDurationMillis).load();
     }
 
-    private ExportVideo(GuiSettings guiSettings, FxChartBuilder<?> chartBuilder, Parameter<?> iteratedParameter, long chartFrameDurationMillis) {
-        this.guiSettings = guiSettings;
+    private ExportVideo(GuiSettingsManager guiSettingsManager, FxChartBuilder<?> chartBuilder, Parameter<?> iteratedParameter, long chartFrameDurationMillis) {
+        this.guiSettingsManager = guiSettingsManager;
         this.chartBuilder = chartBuilder;
         this.iteratedParameter = iteratedParameter;
         this.chartFrameDurationMillis = chartFrameDurationMillis;
@@ -131,6 +134,11 @@ public class ExportVideo extends GridPane implements FXMLNode {
         cmbFramesPerSec.getSelectionModel().select((Integer)FramesPerSecond.FPS_25.getFps());
     }
 
+    @Override
+    public FxPropsManager getFxPropsManager() {
+        return new FxPropsManager(guiSettingsManager.getSettings(), "exportVideo");
+    }
+
     public void chooseOutputFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Output file");
@@ -140,6 +148,7 @@ public class ExportVideo extends GridPane implements FXMLNode {
                 new FileChooser.ExtensionFilter("All files", "*.*")
         );
 
+        GuiSettings guiSettings = guiSettingsManager.getSettings();
         String initialDirPath = guiSettings.getProperty(PROP_VIDEO_EXPORT_DIR, guiSettings.getMostRecentProjectDir().getAbsolutePath(), false);
         File initialDir = new File(initialDirPath);
         fileChooser.setInitialDirectory(initialDir);
@@ -162,22 +171,13 @@ public class ExportVideo extends GridPane implements FXMLNode {
                 Dialogs.error("Export video", "Cannot create the output directory '" + outputDir.getAbsolutePath() + "'.");
                 return;
             }
-            guiSettings.setProperty(PROP_VIDEO_EXPORT_DIR, outputDir.getAbsolutePath());
+            guiSettingsManager.getSettings().setProperty(PROP_VIDEO_EXPORT_DIR, outputDir.getAbsolutePath());
         }
 
         VideoResolution resolution = Optional.ofNullable(cmbResolution.getSelectionModel().getSelectedItem()).orElse(VideoResolution.R_1280_720);
 
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
-
         AnchorPane chartParentPane = new AnchorPane();
         ChartController<?> chartController = chartBuilder.createController(chartParentPane);
-
-        Scene scene = new Scene(chartParentPane);
-        stage.setScene(scene);
-
-        stage.setTitle("Export video");
 
         int width = resolution.getWidth();
         int height = resolution.getHeight();
@@ -213,6 +213,15 @@ public class ExportVideo extends GridPane implements FXMLNode {
         int valueCount = possibleValues.size();
 
         AtomicBoolean cancelFlag = new AtomicBoolean(false);
+
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        Scene scene = new Scene(chartParentPane);
+        stage.setScene(scene);
+
+        stage.setTitle("Export video");
 
         stage.setOnShown(ev -> {
             stage.setMinWidth(stage.getWidth());

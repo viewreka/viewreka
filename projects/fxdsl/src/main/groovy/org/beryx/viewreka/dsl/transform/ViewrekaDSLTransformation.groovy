@@ -35,7 +35,7 @@ public class ViewrekaDSLTransformation extends AbstractASTTransformation {
             AnnotationNode annNode = nodes[0]
             Keyword[] keywords = annNode?.members?.get('keywords')?.expressions.collect() { ClassExpression k ->
                 log.trace "Keyword class: ${k.text}"
-                return Class.forName(k.text).getConstructor().newInstance()
+                return Class.forName(k.text, true, Thread.currentThread().contextClassLoader).getConstructor().newInstance()
             }
             log.debug "keywords: $keywords"
 

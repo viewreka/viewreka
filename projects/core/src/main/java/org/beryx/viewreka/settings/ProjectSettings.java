@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Interface for accessing the settings of a Viewreka project.
  */
-public interface ProjectSettings {
+public interface ProjectSettings extends Settings {
     static final Logger _log = LoggerFactory.getLogger(ProjectSettings.class);
 
     /**
@@ -65,7 +65,7 @@ public interface ProjectSettings {
      * @return the previous value of the property with the specified name
      */
     default <T extends Serializable> Object setProperty(String name, T value) {
-        _log.debug("Property " + name + " set to " + value);
+        _log.debug("Property {} set to {}", name, value);
         return getProperties().put(name, value);
     }
 }

@@ -14,15 +14,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-import org.beryx.viewreka.fxui.Dialogs;
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.Dialogs;
+import org.beryx.viewreka.fxcommons.FXMLNode;
+import org.beryx.viewreka.fxui.settings.FxPropsAwareWindow;
+import org.beryx.viewreka.fxui.settings.FxPropsManager;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
 import org.beryx.viewreka.settings.SettingsManager;
 
 /**
  * The dialog used to create a new file.
  */
-public class NewFile extends BorderPane implements FXMLNode {
+public class NewFile extends BorderPane implements FXMLNode, FxPropsAwareWindow {
     private final SettingsManager<GuiSettings> guiSettingsManager;
 
     private File createdFile = null;
@@ -57,6 +59,11 @@ public class NewFile extends BorderPane implements FXMLNode {
 
         GuiSettings guiSettings = guiSettingsManager.getSettings();
         txtNewFileDir.setText(guiSettings.getMostRecentProjectDir().getAbsolutePath());
+    }
+
+    @Override
+    public FxPropsManager getFxPropsManager() {
+        return new FxPropsManager(guiSettingsManager.getSettings(), "newFile");
     }
 
     public void chooseFileDir() {

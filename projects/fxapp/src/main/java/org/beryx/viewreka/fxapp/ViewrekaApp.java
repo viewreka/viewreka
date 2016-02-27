@@ -60,6 +60,7 @@ public abstract class ViewrekaApp extends Application {
         stage.widthProperty().addListener((observable, oldValue, newValue) -> settings.setWindowWidth(newValue.doubleValue()));
         stage.heightProperty().addListener((observable, oldValue, newValue) -> settings.setWindowHeight(newValue.doubleValue()));
 
+        stage.setOnShown(ev -> viewreka.onShown());
         stage.show();
     }
 }

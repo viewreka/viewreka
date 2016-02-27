@@ -7,13 +7,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.beryx.viewreka.settings.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * General GUI settings (not related to a specific Viewreka project).
  */
-public interface GuiSettings {
+public interface GuiSettings extends Settings {
 	static final Logger _log = LoggerFactory.getLogger(GuiSettings.class);
 
 	/**
@@ -40,6 +41,14 @@ public interface GuiSettings {
 	 * @return the previous value of the property with the specified name
 	 */
 	default <T extends Serializable> Object setProperty(String name, T value) {
+        _log.debug("Setting {} to {}", name, value);
+        if("newProject.dialog.y".equals(name) && String.valueOf(value).startsWith("306")) {
+            try {
+                throw new Exception("WTF: " + value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 		return getProperties().put(name, value);
 	}
 

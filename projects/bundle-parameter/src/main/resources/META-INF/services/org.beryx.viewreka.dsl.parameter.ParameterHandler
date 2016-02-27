@@ -1,0 +1,8 @@
+org.beryx.vbundle.parameter.Handlers$String
+org.beryx.vbundle.parameter.Handlers$Integer
+org.beryx.vbundle.parameter.Handlers$Long
+org.beryx.vbundle.parameter.Handlers$Float
+org.beryx.vbundle.parameter.Handlers$Double
+org.beryx.vbundle.parameter.Handlers$SqlDate
+org.beryx.vbundle.parameter.Handlers$SqlTime
+org.beryx.vbundle.parameter.Handlers$SqlTimestamp

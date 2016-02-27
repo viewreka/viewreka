@@ -9,7 +9,7 @@ import org.beryx.viewreka.project.Project;
 /**
  * An extension of the {@link Project} interface for JavaFX Viewreka projects.
  */
-public interface FxProject extends Project<FxView>{
+public interface FxProject extends Project<FxView, FxGui>{
     /**
      * @return the text of the project script
      */

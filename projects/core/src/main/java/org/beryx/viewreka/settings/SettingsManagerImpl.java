@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * An abstract implementation of the {@link SettingsManager} interface, which stores the settings in a file.
  * @param <T> the type of the settings structure handled by this manager
  */
-public abstract class SettingsManagerImpl<T> implements SettingsManager<T> {
+public abstract class SettingsManagerImpl<T extends Settings> implements SettingsManager<T> {
     private static final Logger log = LoggerFactory.getLogger(SettingsManagerImpl.class);
 
     private final String settingsDirPath;
@@ -56,6 +56,8 @@ public abstract class SettingsManagerImpl<T> implements SettingsManager<T> {
                     settings = (T)decoder.readObject();
                     if(settings == null) {
                         log.warn("Null existing settings. Creating new settings...");
+                    } else {
+                        settings.afterLoad();
                     }
                 } catch(Exception e) {
                     if(e instanceof FileNotFoundException) {
@@ -79,6 +81,7 @@ public abstract class SettingsManagerImpl<T> implements SettingsManager<T> {
         if(settingsFileName.isEmpty()) return;
         Path dirPath = Paths.get(settingsDirPath);
         try (XMLEncoder encoder = new XMLEncoder(new FileOutputStream(Paths.get(Files.createDirectories(dirPath).toString(), settingsFileName).toFile()))) {
+            settings.beforeSave();
             encoder.writeObject(settings);
         } catch(Exception e) {
             log.error("Cannot save settings.", e);

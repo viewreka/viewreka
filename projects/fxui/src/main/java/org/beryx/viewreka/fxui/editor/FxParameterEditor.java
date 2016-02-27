@@ -2,7 +2,7 @@ package org.beryx.viewreka.fxui.editor;
 
 import javafx.scene.layout.FlowPane;
 
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.FXMLNode;
 import org.beryx.viewreka.parameter.Parameter;
 import org.beryx.viewreka.project.ParameterEditor;
 

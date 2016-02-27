@@ -1,0 +1,8 @@
+org.beryx.vbundle.chart.axis.Handlers$String
+org.beryx.vbundle.chart.axis.Handlers$Integer
+org.beryx.vbundle.chart.axis.Handlers$Long
+org.beryx.vbundle.chart.axis.Handlers$Float
+org.beryx.vbundle.chart.axis.Handlers$Double
+org.beryx.vbundle.chart.axis.Handlers$SqlDate
+org.beryx.vbundle.chart.axis.Handlers$SqlTime
+org.beryx.vbundle.chart.axis.Handlers$SqlTimestamp

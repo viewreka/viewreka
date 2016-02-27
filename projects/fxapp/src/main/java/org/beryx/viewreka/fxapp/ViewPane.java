@@ -36,8 +36,8 @@ import javafx.scene.layout.VBox;
 
 import org.beryx.viewreka.chart.ChartController;
 import org.beryx.viewreka.core.ViewrekaException;
-import org.beryx.viewreka.fxui.Dialogs;
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.Dialogs;
+import org.beryx.viewreka.fxcommons.FXMLNode;
 import org.beryx.viewreka.fxui.FxView;
 import org.beryx.viewreka.fxui.ValueIteratorService;
 import org.beryx.viewreka.fxui.chart.FxChartBuilder;

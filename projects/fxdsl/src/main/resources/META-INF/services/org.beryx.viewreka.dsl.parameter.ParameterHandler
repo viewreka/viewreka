@@ -1,8 +1,0 @@
-org.beryx.viewreka.dsl.parameter.ParameterHandler$String
-org.beryx.viewreka.dsl.parameter.ParameterHandler$Integer
-org.beryx.viewreka.dsl.parameter.ParameterHandler$Long
-org.beryx.viewreka.dsl.parameter.ParameterHandler$Float
-org.beryx.viewreka.dsl.parameter.ParameterHandler$Double
-org.beryx.viewreka.dsl.parameter.ParameterHandler$SqlDate
-org.beryx.viewreka.dsl.parameter.ParameterHandler$SqlTime
-org.beryx.viewreka.dsl.parameter.ParameterHandler$SqlTimestamp

@@ -2,6 +2,7 @@ package org.beryx.viewreka.dsl.project
 
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
+import org.beryx.viewreka.bundle.api.ViewrekaBundle
 import org.beryx.viewreka.core.ViewrekaException
 import org.beryx.viewreka.dsl.ViewrekaClassLoader
 import org.beryx.viewreka.dsl.ViewrekaScript
@@ -56,7 +57,9 @@ class ProjectBuilder {
                     ViewrekaDSL)
             conf.addCompilationCustomizers(customizer)
 
-            def gcl = new ViewrekaClassLoader(scriptSource)
+            def gcl = new ViewrekaClassLoader()
+            project.bundles = gcl.configureScript(scriptSource)
+            log.info("Bundles: $project.bundles")
             Thread.currentThread().setContextClassLoader(gcl)
             def shell = new GroovyShell(gcl, conf)
 

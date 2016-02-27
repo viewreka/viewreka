@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.org.beryx.viewreka:viewreka-bundle-gradle-plugin:0.1"
+    }
+}
+
+
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'org.beryx.viewreka.bundle'
+
+    repositories {
+        jcenter()
+    }
+
+    sourceCompatibility = 1.8
+    group = 'org.beryx'
+
+    def defaultEncoding = 'UTF-8'
+    compileGroovy.options*.encoding = defaultEncoding
+    compileGroovy.groovyOptions*.encoding = defaultEncoding
+
+    group = 'org.beryx'
+    version = '0.0.1'
+
+    dependencies {
+        compile "org.codehaus.groovy:groovy-all:2.+"
+        compile fileTree(dir: "../../../../../../bundle-api/build/libs" , include: '*.jar' )
+    }
+    
+    task installBundle(dependsOn: 'viewrekaBundle') << {
+        copy {
+            from buildDir.path + '/libs'
+            into '../../dummy-bundles'
+       }
+    }
+}
+
+project('facebook_1_7') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.FacebookBundle_1_7'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('facebook_2_5') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.FacebookBundle_2_5'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('facebook_3_2') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.FacebookBundle_3_2'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('foursquare') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.FoursquareBundle'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('ipparam') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.IPParameterBundle'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('radar') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.RadarBundle'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('streamgraph') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.StreamgraphBundle'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}
+project('twitter') {
+    viewrekaBundle {
+        bundleClass = 'org.beryx.dummy.TwitterBundle'
+        viewrekaVersionMajor = 0
+        viewrekaVersionMinor = 2
+    }
+}

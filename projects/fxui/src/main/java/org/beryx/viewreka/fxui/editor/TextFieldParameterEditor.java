@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import org.beryx.viewreka.fxui.FxUtil;
+import org.beryx.viewreka.fxcommons.FxUtil;
 import org.beryx.viewreka.parameter.Parameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

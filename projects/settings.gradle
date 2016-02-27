@@ -1,1 +1,1 @@
-include 'core', 'fxui', 'fxdsl', 'fxapp', 'ext-samples'
+include 'core', 'fxcommons', 'bundle-util', 'bundle-repo', 'fxui', 'fxdsl', 'bundle-parameter', 'bundle-sql', 'bundle-axis', 'bundle-chart-html', 'bundle-chart-xy', 'bundle-derby', 'fxapp', 'bundles:jdbc:oracle', 'bundles:jdbc:mysql'

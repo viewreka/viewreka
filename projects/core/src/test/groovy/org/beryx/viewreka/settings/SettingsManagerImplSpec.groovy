@@ -3,10 +3,11 @@ package org.beryx.viewreka.settings
 import spock.lang.Specification
 
 class SettingsManagerImplSpec extends Specification{
+    static class SettingsMap extends HashMap implements Settings {}
     def createManager(File file) {
-        return new SettingsManagerImpl<Map>(file.parent, file.name) {
+        return new SettingsManagerImpl<SettingsMap>(file.parent, file.name) {
             @Override
-            protected Map createNewSettings() {
+            protected SettingsMap createNewSettings() {
                 return [:]
             }
         }

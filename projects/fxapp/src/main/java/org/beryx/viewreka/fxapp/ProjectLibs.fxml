@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root minWidth="404.0" prefHeight="332.0" prefWidth="800.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <VBox maxHeight="1.7976931348623157E308">
+            <BorderPane.margin>
+                <Insets bottom="20.0" top="20.0" />
+            </BorderPane.margin>
+            <children>
+
+                <Label fx:id="lbProjectLibs" text="Project libraries:" VBox.vgrow="NEVER">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Label>
+
+                <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                    <children>
+                        <ListView fx:id="lstLib" maxHeight="1.7976931348623157E308" prefHeight="328.0" prefWidth="615.0" GridPane.hgrow="ALWAYS" GridPane.rowSpan="4" GridPane.vgrow="ALWAYS" />
+                        <Button fx:id="butBundleAdd" alignment="CENTER" maxWidth="140.0" minWidth="140.0" mnemonicParsing="false" onAction="#addBundles" prefWidth="140.0" text="Add from repository..." GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Button fx:id="butUncatalogedLibAdd" alignment="CENTER" maxWidth="140.0" minWidth="140.0" mnemonicParsing="false" onAction="#addUncatalogedLibs" prefWidth="140.0" text="Add uncataloged..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="butLibRemove" alignment="CENTER" maxWidth="140.0" minWidth="140.0" mnemonicParsing="false" onAction="#removeLibs" prefWidth="140.0" text="Remove" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints minWidth="140.0" prefWidth="140.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
+                        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" vgrow="ALWAYS" />
+                        <RowConstraints />
+                    </rowConstraints>
+                </GridPane>
+
+                <Label fx:id="lbExistingLibs" text="Libraries already existing in the 'lib' directory:" VBox.vgrow="NEVER">
+                      <VBox.margin>
+                          <Insets top="20.0" />
+                      </VBox.margin>
+                </Label>
+                <ListView fx:id="lstExistingLib" maxHeight="1.7976931348623157E308" prefHeight="328.0" prefWidth="615.0" GridPane.hgrow="ALWAYS" GridPane.rowSpan="4" GridPane.vgrow="ALWAYS" />
+            </children>
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+        </VBox>
+    </center>
+    <padding>
+        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+    </padding>
+</fx:root>

@@ -1,8 +1,0 @@
-org.beryx.viewreka.dsl.chart.AxisHandler$String
-org.beryx.viewreka.dsl.chart.AxisHandler$Integer
-org.beryx.viewreka.dsl.chart.AxisHandler$Long
-org.beryx.viewreka.dsl.chart.AxisHandler$Float
-org.beryx.viewreka.dsl.chart.AxisHandler$Double
-org.beryx.viewreka.dsl.chart.AxisHandler$SqlDate
-org.beryx.viewreka.dsl.chart.AxisHandler$SqlTime
-org.beryx.viewreka.dsl.chart.AxisHandler$SqlTimestamp

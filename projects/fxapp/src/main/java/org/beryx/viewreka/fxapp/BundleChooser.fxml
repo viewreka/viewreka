@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.input.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+
+<fx:root minWidth="320.0" minHeight="240.0" prefHeight="480.0" prefWidth="800.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+        <BorderPane>
+            <left>
+                <Label fx:id="lbBundleChooserHeaderText" text="Choose Viewreka Bundles" BorderPane.alignment="CENTER" />
+            </left>
+            <right>
+                <Label fx:id="lbBundleChooserHeaderIcon" prefHeight="48" prefWidth="48" BorderPane.alignment="CENTER" />
+            </right>
+        </BorderPane>
+    </top>
+    <center>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+            <BorderPane.margin>
+                <Insets bottom="20.0" top="20.0" />
+            </BorderPane.margin>
+            <children>
+            <TreeTableView fx:id="ttvBundles" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+              <columns>
+                  <TreeTableColumn fx:id="ttColName" prefWidth="320.0" text="Name" />
+                  <TreeTableColumn fx:id="ttColVersion" prefWidth="80.0" text="Version" />
+                  <TreeTableColumn fx:id="ttColId" prefWidth="160.0" text="ID" />
+                  <TreeTableColumn fx:id="ttColDescription" prefWidth="480.0" text="Description" />
+              </columns>
+            </TreeTableView>
+            </children>
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+        </VBox>
+    </center>
+    <bottom>
+        <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" hgap="20.0" prefWidth="-1">
+            <children>
+                <Button fx:id="butBundleChooserOk" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#chooseBundles" prefWidth="90.0" text="Add selected" />
+                <Button fx:id="butBundleChooserCancel" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#cancelBundles" prefWidth="90.0" text="Cancel" />
+            </children>
+        </FlowPane>
+    </bottom>
+    <padding>
+        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+</fx:root>

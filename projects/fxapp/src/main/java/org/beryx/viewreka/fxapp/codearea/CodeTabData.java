@@ -1,6 +1,7 @@
 package org.beryx.viewreka.fxapp.codearea;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -65,7 +66,12 @@ public class CodeTabData {
 
     public boolean isDirty() {
         String text = (textProperty == null) ? null : textProperty.getValue();
-        return !Objects.equals(initialTextProperty.get(), text);
+        String initialText = initialTextProperty.get();
+        if(initialText != null) {
+            // RichTextFx uses '\n' as line terminator
+            initialText = initialText.replaceAll("\r\n|\r", "\n");
+        }
+        return !Objects.equals(initialText, text);
     }
 
     @Override

@@ -1,23 +1,6 @@
 package org.beryx.viewreka.fxapp;
 
-import static org.beryx.viewreka.fxapp.codearea.CodeTabData.getData;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.Writer;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.regex.Pattern;
-
+import groovy.lang.GroovyCodeSource;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -33,48 +16,53 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.control.SplitPane.Divider;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import javax.imageio.ImageIO;
-
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.beryx.viewreka.bundle.api.CodeTemplate;
+import org.beryx.viewreka.bundle.api.ViewrekaBundle;
+import org.beryx.viewreka.core.VersionInfo;
+import org.beryx.viewreka.dsl.ViewrekaClassLoader;
 import org.beryx.viewreka.dsl.project.ScriptIssueImpl;
 import org.beryx.viewreka.fxapp.codearea.CodeAreaTab;
 import org.beryx.viewreka.fxapp.codearea.CodeTabData;
 import org.beryx.viewreka.fxapp.codearea.ViewrekaCodeArea;
-import org.beryx.viewreka.fxui.Dialogs;
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.Dialogs;
+import org.beryx.viewreka.fxcommons.FXMLNode;
+import org.beryx.viewreka.fxui.FxGui;
 import org.beryx.viewreka.fxui.FxProject;
 import org.beryx.viewreka.fxui.FxView;
 import org.beryx.viewreka.fxui.chart.FxChartBuilder;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
+import org.beryx.viewreka.fxui.settings.GuiSettingsManager;
 import org.beryx.viewreka.parameter.Parameter;
 import org.beryx.viewreka.project.ProjectReader;
 import org.beryx.viewreka.settings.ProjectSettings;
-import org.beryx.viewreka.settings.SettingsManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static org.beryx.viewreka.fxapp.codearea.CodeTabData.getData;
 
 /**
  * The main pane of a Viewreka GUI.
  */
-public class Viewreka extends BorderPane implements FXMLNode {
+public class Viewreka extends BorderPane implements FXMLNode, ClassLoaderManager, FxGui {
     private static final Logger log = LoggerFactory.getLogger(Viewreka.class);
 
     private static final int MAX_TEXT_FILE_LENGTH = 65535;
@@ -105,6 +93,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
     @FXML private Button butNewProject;
     @FXML private MenuItem mnuOpenProject;
     @FXML private Button butOpenProject;
+    @FXML private MenuItem mnuEditProject;
 
     @FXML private MenuItem mnuNewFile;
     @FXML private Button butNewFile;
@@ -115,6 +104,9 @@ public class Viewreka extends BorderPane implements FXMLNode {
     @FXML private Button butSaveFile;
     @FXML private MenuItem mnuSaveAll;
     @FXML private Button butSaveAll;
+
+    @FXML private MenuItem mnuCloseTab;
+    @FXML private MenuItem mnuCloseProject;
 
     @FXML private MenuItem mnuReloadProject;
     @FXML private Button butReloadProject;
@@ -137,7 +129,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
     private final StringProperty projectPathProperty = new SimpleStringProperty();
 
     private final ProjectReader<FxProject> projectReader;
-    private final SettingsManager<GuiSettings> guiSettingsManager;
+    private final GuiSettingsManager guiSettingsManager;
 
     private final ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 
@@ -145,17 +137,23 @@ public class Viewreka extends BorderPane implements FXMLNode {
     private MenuTabBinding menuTabBindingHelp;
 
     private static class MenuTabBinding {
+        private final TabPane tabPane;
+        private final Tab tab;
         private final MenuItem menuItem;
         private final String fileAlias;
 
         private ProjectSettings settings;
 
         public MenuTabBinding(TabPane tabPane, Tab tab, MenuItem menuItem, String fileAlias, boolean insertFirst) {
+            this.tabPane = tabPane;
+            this.tab = tab;
             this.menuItem = menuItem;
             this.fileAlias = fileAlias;
             getData(tab).setFilePath(fileAlias);
 
-            tab.setOnClosed(event -> menuItem.setDisable(false));
+            tab.setOnClosed(event -> {
+                menuItem.setDisable(false);
+            });
             menuItem.setOnAction(ev -> {
                 ObservableList<Tab> tabs = tabPane.getTabs();
                 if(!tabs.contains(tab)) {
@@ -172,12 +170,13 @@ public class Viewreka extends BorderPane implements FXMLNode {
                     tabs.forEach(t -> openFiles.add(getData(t).getFilePath()));
                 }
             });
-
         }
 
         public void setSettings(ProjectSettings settings, boolean disabledOnNullSettings) {
             this.settings = null;
-            boolean disabled = (settings == null) ? disabledOnNullSettings : getOpenFiles(settings).contains(fileAlias);
+            boolean disabled = (settings == null) ? disabledOnNullSettings : (tabPane.getSelectionModel().getSelectedItem() == tab);
+            log.debug(menuItem.getId() + " " + (disabled ? "disabled" : "enabled") + ", settings: " + (settings != null)
+                                    + ", open files: " + getOpenFiles(settings) + " / fileAlias: " + fileAlias);
             menuItem.setDisable(disabled);
             this.settings = settings;
         }
@@ -187,7 +186,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
         }
     }
 
-    public Viewreka(ProjectReader<FxProject> projectReader, SettingsManager<GuiSettings> guiSettingsManager) {
+    public Viewreka(ProjectReader<FxProject> projectReader, GuiSettingsManager guiSettingsManager) {
         this.projectReader = projectReader;
         this.guiSettingsManager = guiSettingsManager;
     }
@@ -205,6 +204,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
         check("butNewProject", butNewProject);
         check("mnuOpenProject", mnuOpenProject);
         check("butOpenProject", butOpenProject);
+        check("mnuEditProject", mnuEditProject);
 
         check("mnuNewFile", mnuNewFile);
         check("butNewFile", butNewFile);
@@ -215,6 +215,9 @@ public class Viewreka extends BorderPane implements FXMLNode {
         check("butSaveFile", butSaveFile);
         check("mnuSaveAll", mnuSaveAll);
         check("butSaveAll", butSaveAll);
+
+        check("mnuCloseTab", mnuCloseTab);
+        check("mnuCloseProject", mnuCloseProject);
 
         check("mnuReloadProject", mnuReloadProject);
         check("butReloadProject", butReloadProject);
@@ -247,9 +250,16 @@ public class Viewreka extends BorderPane implements FXMLNode {
         // TODO - implement Help and remove the following line
         mnuShowHelp.setVisible(false);
 
-        BooleanBinding reloadBinding = projectPathProperty.isNull();
-        mnuReloadProject.disableProperty().bind(reloadBinding);
-        butReloadProject.disableProperty().bind(reloadBinding);
+        BooleanBinding projectClosedBinding = projectPathProperty.isNull();
+        mnuReloadProject.disableProperty().bind(projectClosedBinding);
+        butReloadProject.disableProperty().bind(projectClosedBinding);
+        mnuCloseProject.disableProperty().bind(projectClosedBinding);
+        mnuEditProject.disableProperty().bind(projectClosedBinding);
+
+        BooleanBinding tabClosedBinding = Bindings.createBooleanBinding(
+                () -> projectTabPane.getSelectionModel().isEmpty(),
+                projectTabPane.getSelectionModel().selectedItemProperty());
+        mnuCloseTab.disableProperty().bind(tabClosedBinding);
 
         BooleanBinding chartExportDisabledBinding = viewsTabPane.getSelectionModel().selectedItemProperty().isNull();
         mnuExportChart.disableProperty().bind(chartExportDisabledBinding);
@@ -267,6 +277,8 @@ public class Viewreka extends BorderPane implements FXMLNode {
 
         mnuExportVideo.disableProperty().bind(videoExportDisabledBinding);
         butExportVideo.disableProperty().bind(videoExportDisabledBinding);
+
+        sourceCodeArea.setClassLoaderManager(this);
 
         setProject(null, null, false);
     }
@@ -325,6 +337,9 @@ public class Viewreka extends BorderPane implements FXMLNode {
                 }
 
                 Platform.runLater(() ->{
+                    menuTabBindingSourceCode.setSettings(projectSettings, true);
+                    menuTabBindingHelp.setSettings(projectSettings, false);
+
                     butSaveAll.disableProperty().unbind();
                     mnuSaveAll.disableProperty().unbind();
                     butSaveAll.setDisable(true);
@@ -370,7 +385,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
                     File file = new File(filePath);
                     addedTab = CodeAreaTab.fromFile(file);
                     final Tab tab = addedTab;
-                    tab.setOnClosed(ev -> {if(!tryClose(tab)) ev.consume();});
+                    tab.setOnCloseRequest(ev -> {if(!tryClose(tab)) ev.consume();});
                 } catch(Exception e) {
                     addedTab = null;
                 }
@@ -433,7 +448,6 @@ public class Viewreka extends BorderPane implements FXMLNode {
 
     private ChangeListener<Number> sourceCodeCaretPositionListener = null;
     public void setProject(FxProject newProject, String newProjectPath, boolean doOnlyViewUpdates) {
-
         if(newProject != null) {
             ProjectSettings projectSettings = newProject.getProjectSettingsManager().getSettings();
             String chartStylesheet = projectSettings.getProperty(PROP_CHART_STYLESHEET, null, true);
@@ -477,6 +491,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
 
         this.project = newProject;
         this.projectPathProperty.set(newProjectPath);
+        sourceCodeArea.setProjectModel(newProject);
 
         if(newProject == null) {
             updateProjectTabs(null);
@@ -509,6 +524,12 @@ public class Viewreka extends BorderPane implements FXMLNode {
 
             String projTitle = newProject.getTitle();
             getStage().setTitle(newProject.getName() + ((projTitle == null || projTitle.isEmpty()) ? "" : (" - " + projTitle)));
+
+            sourceCodeArea.getCodeTemplates().clear();
+            for(ViewrekaBundle bundle : project.getBundles()) {
+                bundle.addTo(this);
+                sourceCodeArea.getCodeTemplates().addAll(bundle.getTemplates());
+            }
 
             String initialScriptText = newProject.getScriptText();
             sourceCodeArea.setText(initialScriptText);
@@ -593,26 +614,49 @@ public class Viewreka extends BorderPane implements FXMLNode {
         }
         layout();
     }
+    public void editProject() {
+        String projectPath = projectPathProperty.get();
+        if(projectPath == null) return;
+        File prjFile = new File(projectPath);
+        String prjName = (project != null) ? project.getName() : prjFile.getName();
+        File prjDir = prjFile.getParentFile();
+        EditProject dialog = new EditProject(guiSettingsManager);
+        dialog.getProjectLibs().initExistingLibs(prjDir.getAbsolutePath());
+        dialog.showDialog().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                dialog.getProjectLibs().installLibs(prjName, prjDir);
+                openProject(prjFile, false);
+                reloadProject();
+            }
+        });
+    }
+
 
     public void newProject() {
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
+        NewProject newProject = new NewProject(guiSettingsManager);
+        Optional<File> optPrjFile = newProject.showDialog();
+        if(optPrjFile.isPresent()) {
+            File projectFile = optPrjFile.get();
+            if(projectFile != null && projectFile.isFile()) {
+                openProject(projectFile, false);
+                initializeNewProject();
+            }
+        }
+    }
 
-        NewProject newProject = NewProject.createWith(guiSettingsManager);
-
-        Scene scene = new Scene(newProject, newProject.getPrefWidth(), newProject.getPrefHeight());
-        stage.setScene(scene);
-
-        stage.setMinWidth(newProject.getMinWidth());
-        stage.setMinHeight(newProject.getPrefHeight());
-        stage.setTitle("New Project");
-
-        stage.showAndWait();
-
-        File projectFile = newProject.getCreatedProjectFile();
-        if(projectFile != null && projectFile.isFile()) {
-            openProject(projectFile, false);
+    protected void initializeNewProject() {
+        if(project != null && StringUtils.isBlank(sourceCodeArea.getText())) {
+            setProjectClassLoader();
+            try {
+                project.getBundles().stream().filter(bundle -> bundle.getCategories().contains("datasource")).forEach(bundle -> {
+                    Optional<CodeTemplate> template = bundle.getTemplates().stream().filter(tmpl -> "datasource".equals(tmpl.getKeyword())).findAny();
+                    if(template.isPresent()) {
+                        sourceCodeArea.insertCodeFragment(template.get());
+                    }
+                });
+            } finally {
+                resetClassLoader();
+            }
         }
     }
 
@@ -746,6 +790,14 @@ public class Viewreka extends BorderPane implements FXMLNode {
         }
     }
 
+    public void onShown() {
+        projectTabPane.requestFocus();
+        Tab tab = projectTabPane.getSelectionModel().getSelectedItem();
+        if(tab != null) {
+            Platform.runLater(() -> tab.getContent().requestFocus());
+        }
+    }
+
     public void openProject(File projectFile, boolean doOnlyViewUpdates) {
         if(project != null) {
             project.getProjectSettingsManager().saveSettings();
@@ -799,6 +851,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
             errorArea.clear();
             projectTabPane.getTabs().clear();
             viewsTabPane.getTabs().clear();
+            sourceCodeArea.getCodeTemplates().clear();
         }
 
         if(project != null) {
@@ -809,6 +862,10 @@ public class Viewreka extends BorderPane implements FXMLNode {
                     log.warn("Error closing datasource " + datasource.getName(), e);
                 }
             });
+
+            for(ViewrekaBundle bundle : project.getBundles()) {
+                bundle.removeFrom(this);
+            }
         }
 
         resetClassLoader();
@@ -818,20 +875,8 @@ public class Viewreka extends BorderPane implements FXMLNode {
     }
 
     public void newFile() {
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
-
         NewFile newFile = NewFile.createWith(guiSettingsManager);
-
-        Scene scene = new Scene(newFile, newFile.getPrefWidth(), newFile.getPrefHeight());
-        stage.setScene(scene);
-
-        stage.setMinWidth(newFile.getMinWidth());
-        stage.setMinHeight(newFile.getPrefHeight());
-        stage.setTitle("New File");
-
-        stage.showAndWait();
+        newFile.showDialog("New File");
 
         File file = newFile.getCreatedFile();
         if(file != null && file.isFile()) {
@@ -840,10 +885,12 @@ public class Viewreka extends BorderPane implements FXMLNode {
     }
 
     public void openFile() {
-        ProjectSettings projectSettings = project.getProjectSettingsManager().getSettings();
-        if(getOpenFiles(projectSettings).size() >= MAX_OPEN_FILES) {
-            Dialogs.error("Open File error", "Too many open files.", "Please close some of your open files.", null);
-            return;
+        if(project != null) {
+            ProjectSettings projectSettings = project.getProjectSettingsManager().getSettings();
+            if(getOpenFiles(projectSettings).size() >= MAX_OPEN_FILES) {
+                Dialogs.error("Open File error", "Too many open files.", "Please close some of your open files.", null);
+                return;
+            }
         }
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open file");
@@ -903,7 +950,7 @@ public class Viewreka extends BorderPane implements FXMLNode {
                     ProjectSettings projectSettings = project.getProjectSettingsManager().getSettings();
                     List<String> openFiles = getOpenFiles(projectSettings);
                     openFiles.add(filePath);
-                    codeAreaTab.setOnClosed(ev -> {if(!tryClose(codeAreaTab)) ev.consume();});
+                    codeAreaTab.setOnCloseRequest(ev -> {if(!tryClose(codeAreaTab)) ev.consume();});
                 }
             } catch(IOException e) {
                 Dialogs.error("Open File error", "Cannot open file '" + filePath + "'", e);
@@ -941,17 +988,17 @@ public class Viewreka extends BorderPane implements FXMLNode {
             log.error("An error occurred while analyzing the file", t);
             return true;
         }
-
-
         return false;
     }
 
     public void closeTab() {
         Tab tab = projectTabPane.getSelectionModel().getSelectedItem();
         if(tab != null) {
-            if(tryClose(tab)) {
-                projectTabPane.getTabs().remove(tab);
+            EventHandler<Event> handler = tab.getOnClosed();
+            if (handler != null) {
+                handler.handle(null);
             }
+            projectTabPane.getTabs().remove(tab);
         }
     }
 
@@ -1062,41 +1109,39 @@ public class Viewreka extends BorderPane implements FXMLNode {
         if(iteratedParameterName == null) return;
         Parameter<?> iteratedParameter = view.getParameters().get(iteratedParameterName);
 
-        Stage stage = new Stage();
-        stage.initStyle(StageStyle.UTILITY);
-        stage.initModality(Modality.APPLICATION_MODAL);
-
         ExportVideo exportVideo = ExportVideo.createWith(
-                guiSettingsManager.getSettings(),
+                guiSettingsManager,
                 chartBuilder,
                 iteratedParameter,
                 viewPane.getChartFrameDurationMillis());
-
-        Scene scene = new Scene(exportVideo);
-        stage.setScene(scene);
-
-        stage.setTitle("Export charts");
-
-        stage.setOnShown(ev -> {
-            stage.setMinWidth(stage.getWidth());
-            stage.setMinHeight(stage.getHeight());
-        });
-
-        stage.showAndWait();
-
+        exportVideo.showDialog("Export video");
     }
 
-    private void resetClassLoader() {
+    @Override
+    public void resetClassLoader() {
         Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
 
+    @Override
+    public void setProjectClassLoader() {
+        if(project != null) {
+            try {
+                ViewrekaClassLoader cl = new ViewrekaClassLoader();
+                cl.configureScript(new GroovyCodeSource(project.getScriptUri()));
+                Thread.currentThread().setContextClassLoader(cl);
+                log.debug("Class loader for {}: {}", Thread.currentThread(), cl);
+            } catch (IOException e) {
+                project.getScriptIssues().add(ScriptIssueImpl.fromThrowable(e));
+            }
+        }
+    }
 
     public void exitProgram() {
         getStage().close();
     }
 
     public void about() {
-        Dialogs.info("Viewreka!", "Viewreka!");
+        Dialogs.info("About", "Viewreka " + VersionInfo.get());
     }
 
     private static void showError(String title, String header, Throwable t) {

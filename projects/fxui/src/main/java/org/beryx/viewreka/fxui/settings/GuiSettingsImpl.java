@@ -1,5 +1,7 @@
 package org.beryx.viewreka.fxui.settings;
 
+import javafx.stage.Screen;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,8 +12,10 @@ import java.util.Map;
  * Default implementation of the {@link GuiSettings} interface.
  */
 public class GuiSettingsImpl implements GuiSettings {
-	private double x = 10;
-	private double y = 10;
+    private static final double DEFAULT_X = 10;
+    private static final double DEFAULT_Y = 10;
+	private double x = DEFAULT_X;
+	private double y = DEFAULT_Y;
 	private double width = 1280;
 	private double height = 800;
 	private int maxRecentProjects = 10;
@@ -21,7 +25,15 @@ public class GuiSettingsImpl implements GuiSettings {
 
 	private Map<String, Serializable> properties = new LinkedHashMap<>();
 
-	@Override
+    @Override
+    public void afterLoad() {
+        if(Screen.getScreensForRectangle(x, y, x+1, y+1).isEmpty()) {
+            x = DEFAULT_X;
+            y = DEFAULT_Y;
+        }
+    }
+
+    @Override
 	public double getWindowX() {
 		return x;
 	}

@@ -4,7 +4,6 @@ import org.beryx.viewreka.core.ViewrekaException
 import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
 import org.beryx.viewreka.dsl.data.DataSourceBuilder
 import org.beryx.viewreka.dsl.data.QueryBuilder
-import org.beryx.viewreka.dsl.data.SqlDataSourceBuilder
 import org.beryx.viewreka.dsl.parameter.ParameterBuilder
 import org.beryx.viewreka.dsl.project.FxProjectImpl
 import org.beryx.viewreka.fxui.FxViewImpl
@@ -47,18 +46,10 @@ abstract class ViewrekaScript extends Script {
         super.setBinding(b);
     }
 
-//	def FxProject getProject() {
-//		project.validate()
-//		return project
-//	}
-
-    def datasource(String name, Closure closure) {
-        datasource(name, null, closure);
-    }
-
     def datasource(String name, Map options, Closure closure) {
         if(project.dataSources.containsKey(name)) throw new ViewrekaException("Duplicate data source: $name")
-        Class<? extends DataSourceBuilder> type = options?.type ?: SqlDataSourceBuilder;
+        Class<? extends DataSourceBuilder> type = options?.type
+        if(!type) throw new ViewrekaException("Missing type in satasource $name")
         def builder = type.getConstructor().newInstance()
         def ds = builder.build(name, closure)
         project.dataSources[name] = ds

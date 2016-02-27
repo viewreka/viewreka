@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 
 import org.apache.commons.io.FilenameUtils;
-import org.beryx.viewreka.fxui.FXMLNode;
+import org.beryx.viewreka.fxcommons.FXMLNode;
 
 /**
  * A {@link Tab} containing a {@link SimpleCodeArea}.

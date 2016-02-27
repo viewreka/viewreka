@@ -11,10 +11,18 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.event.EventHandler;
+import javafx.scene.control.IndexRange;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.StringUtils;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
+import org.fxmisc.wellbehaved.event.EventHandlerHelper;
+import org.fxmisc.wellbehaved.event.EventPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +52,8 @@ public class SimpleCodeArea extends CodeArea {
     private Supplier<String> keywordPatternSupplier = () -> getKeywordPattern();
     private Supplier<Pattern> codePatternCreator = () -> createCodePattern();
 
+    private int tabAdvance = 4;
+    private boolean indentationOnEnter = true;
 
     public static class StyleGroup {
         private final String groupName;
@@ -92,9 +102,100 @@ public class SimpleCodeArea extends CodeArea {
         getStylesheets().add(SimpleCodeArea.class.getResource(cssName).toExternalForm());
 
         setParagraphGraphicFactory(LineNumberFactory.get(this));
-        textProperty().addListener((obs, oldText, newText) -> {
-            setStyleSpans(0, computeHighlighting(newText));
+        richChanges().subscribe(change -> {
+            setStyleSpans(0, computeHighlighting(getText()));
         });
+        EventHandler<? super KeyEvent> tabHandler = EventHandlerHelper
+                .on(EventPattern.keyPressed(KeyCode.ENTER)).act(event -> applyEnter())
+                .on(EventPattern.keyPressed(KeyCode.TAB)).act(event -> applyTab())
+                .on(EventPattern.keyPressed(KeyCode.TAB, KeyCombination.SHIFT_DOWN)).act(event -> applyShiftTab())
+                .create();
+        EventHandlerHelper.install(onKeyPressedProperty(), tabHandler);
+    }
+
+    public int getTabAdvance() {
+        return tabAdvance;
+    }
+    public void setTabAdvance(int tabAdvance) {
+        this.tabAdvance = tabAdvance;
+    }
+
+    public boolean isIndentationOnEnter() {
+        return indentationOnEnter;
+    }
+
+    public void setIndentationOnEnter(boolean indentationOnEnter) {
+        this.indentationOnEnter = indentationOnEnter;
+    }
+
+    protected void applyEnter() {
+        String replacement = "\n";
+        if(indentationOnEnter) {
+            Position startPos = offsetToPosition(getSelection().getStart(), Bias.Forward);
+            String text = getText(startPos.getMajor());
+            int indent = 0;
+            while(indent < startPos.getMinor()) {
+                char ch = text.charAt(indent);
+                if(ch != ' ' &&  ch != '\t') break;
+                indent++;
+            }
+            replacement += text.substring(0, indent);
+        }
+        replaceSelection(replacement);
+    }
+
+    protected void applyTab() {
+        IndexRange selection = getSelection();
+        Position startPos = offsetToPosition(selection.getStart(), Bias.Forward);
+        if(selection.getLength() == 0) {
+            int spaceCount = tabAdvance - startPos.getMinor() % tabAdvance;
+            replaceSelection(StringUtils.repeat(' ', spaceCount));
+        } else {
+            int startParagraph = startPos.getMajor();
+            Position endPos = offsetToPosition(selection.getEnd(), Bias.Forward);
+            int endParagraph = endPos.getMajor();
+            String spaces = StringUtils.repeat(' ', tabAdvance);
+            for(int pg = startParagraph; pg <= endParagraph; pg++) {
+                insertText(position(pg, 0).toOffset(), spaces);
+            }
+            int newStartOffset = startPos.offsetBy(tabAdvance, Bias.Forward).toOffset();
+            int newEndOffset = endPos.offsetBy(tabAdvance, Bias.Forward).toOffset();
+            selectRange(newStartOffset, newEndOffset);
+        }
+    }
+
+    protected void applyShiftTab() {
+        Position startPos = offsetToPosition(getSelection().getStart(), Bias.Forward);
+        Position endPos = offsetToPosition(getSelection().getEnd(), Bias.Forward);
+        int startParagraph = startPos.getMajor();
+        int endParagraph = endPos.getMajor();
+        int startBackCount = 0;
+        int endBackCount = 0;
+        for(int pg = startParagraph; pg <= endParagraph; pg++) {
+            String text = getText(pg);
+            int backCount = 0;
+            while(backCount < tabAdvance && backCount < text.length()) {
+                if(text.charAt(backCount) == '\t') {
+                    backCount++;
+                    break;
+                }
+                if(text.charAt(backCount) != ' ') break;
+                backCount++;
+            }
+            if(backCount > 0) {
+                if(pg == startParagraph) startBackCount = backCount;
+                if(pg == endParagraph) endBackCount = backCount;
+                deleteText(position(pg, 0).toOffset(), position(pg, backCount).toOffset());
+            }
+        }
+
+        int startMinor = Math.abs(startPos.getMinor() - startBackCount);
+        Position newStartPos = startPos.getTargetObject().position(startPos.getMajor(), startMinor);
+        int endMinor = Math.abs(endPos.getMinor() - endBackCount);
+        Position newEndPos = endPos.getTargetObject().position(endPos.getMajor(), endMinor);
+        log.debug("applyShiftTab():\nstartBackCount: {}, endBackCount: {}\n   startPos: {},    endPos: {}\nnewStartPos: {}, newEndPos: {}",
+                startBackCount, endBackCount, startPos, endPos, newStartPos, newEndPos);
+        selectRange(newStartPos.toOffset(), newEndPos.toOffset());
     }
 
     public StyleGroup putStyleGroup(String groupName, String styleClass, String groupPattern) {
@@ -174,7 +275,6 @@ public class SimpleCodeArea extends CodeArea {
 
     public void setText(String newText) {
         replaceText(newText);
-        setStyleSpans(0, computeHighlighting(newText));
     }
 
     protected StyleSpans<Collection<String>> computeHighlighting(String text) {

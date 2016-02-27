@@ -1,0 +1,13 @@
+.category {
+    -fx-font-weight: bold;
+}
+
+#lbBundleChooserHeaderText {
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+}
+
+#lbBundleChooserHeaderIcon {
+     -fx-background-image: url("/icon/vbundle-48.png");
+     -fx-background-repeat: no-repeat;
+}

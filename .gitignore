@@ -1,5 +1,8 @@
 # directory names ending with / will be excluded from all IDEA modules (see ide.gradle)
 
+gradle-local.properties
+gpg/
+repos/
 .gradle/
 build/
 *.class
