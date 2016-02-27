@@ -133,52 +133,46 @@ subprojects {
         effort = "max"
         excludeFilter = file("$rootProject.projectDir/findbugsExclude.xml")
     }
-    def relPath = rootProject.relativePath(project.projectDir)
-    if(relPath.startsWith('bundles')) {
-//        build { actions = [] }
-//        jar { actions = [] }
-    } else {
-        jar {
-            baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
-            manifest {
-                attributes 'Implementation-Title': "viewreka-${project.archivesBaseName}",
-                        'Implementation-Version': viewrekaVersion,
-                        'Implementation-Vendor-Id': 'beryx.org'
-            }
-
-            from ("${projectDir}/src/main/java") {
-                include('**/*.fxml')
-                include('**/*.css')
-            }
+    jar {
+        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
+        manifest {
+            attributes 'Implementation-Title': "viewreka-${project.archivesBaseName}",
+                    'Implementation-Version': viewrekaVersion,
+                    'Implementation-Vendor-Id': 'beryx.org'
         }
 
-        task sourcesJar(type: Jar, dependsOn: classes) {
-            baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
-            classifier = 'sources'
-            from sourceSets.main.allSource
+        from ("${projectDir}/src/main/java") {
+            include('**/*.fxml')
+            include('**/*.css')
         }
+    }
 
-        publishing {
-            publications {
-                "$project.name"(MavenPublication) {
-                    from components.java
-                    artifact sourcesJar { classifier "sources" }
-                    groupId 'org.beryx.viewreka'
-                    artifactId "viewreka-$project.name"
-                    version viewrekaVersion
-                    pom.withXml {
-                        def root = asNode()
-                        root.appendNode('description', "The viewreka-$project.name artifact")
-                        root.appendNode('url', "https://github.com/viewreka/viewreka")
-                        root.children().last() + pomConfig
-                    }
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    publishing {
+        publications {
+            "$project.name"(MavenPublication) {
+                from components.java
+                artifact sourcesJar { classifier "sources" }
+                groupId 'org.beryx.viewreka'
+                artifactId "viewreka-$project.name"
+                version viewrekaVersion
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('description', "The viewreka-$project.name artifact")
+                    root.appendNode('url', "https://github.com/viewreka/viewreka")
+                    root.children().last() + pomConfig
                 }
             }
         }
+    }
 
-        artifacts {
-            archives sourcesJar
-        }
+    artifacts {
+        archives sourcesJar
     }
 
     task "create-dirs" << {
@@ -301,46 +295,6 @@ project('bundle-repo') {
         compile project(':bundle-util')
     }
 }
-
-project('bundles:jdbc:oracle') {
-    dependencies {
-        compile project(':bundle-util')
-        compile fileTree(dir: "lib", include: '*.jar')
-        testCompile project (path: ':bundle-util', configuration: 'testArchives')
-    }
-
-    viewrekaBundle {
-        baseName = "org.beryx.vbundle.ojdbc-7-$bundleVersion"
-        bundleClass = 'org.beryx.vbundle.oracle.OracleBundle'
-        viewrekaVersionMajor = bundleViewrekaVersionMajor as int
-        viewrekaVersionMinor = bundleViewrekaVersionMinor as int
-        mergeServiceFiles()
-        relocationExclude 'oracle.**'
-    }
-
-    jar.dependsOn viewrekaBundle
-}
-
-project('bundles:jdbc:mysql') {
-    def mysqlVersion = '5.1.38'
-    dependencies {
-        compile project(':bundle-util')
-        compile "mysql:mysql-connector-java:$mysqlVersion"
-        testCompile project (path: ':bundle-util', configuration: 'testArchives')
-    }
-
-    viewrekaBundle {
-        baseName = "org.beryx.vbundle.${project.jar.baseName}-$mysqlVersion-$bundleVersion"
-        bundleClass = 'org.beryx.vbundle.mysql.MySqlBundle'
-        viewrekaVersionMajor = bundleViewrekaVersionMajor as int
-        viewrekaVersionMinor = bundleViewrekaVersionMinor as int
-        mergeServiceFiles()
-        relocationExclude 'com.mysql.**'
-    }
-
-    jar.dependsOn viewrekaBundle
-}
-
 
 project('fxui') {
     dependencies {
