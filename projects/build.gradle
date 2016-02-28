@@ -9,7 +9,6 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.org.beryx.viewreka:viewreka-bundle-gradle-plugin:0.1.1"
         classpath "gradle.plugin.gradle-plugins:jartest:1.0"
     }
 }
@@ -79,7 +78,6 @@ subprojects {
     apply plugin: 'idea'
     apply plugin: 'findbugs'
     apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'org.beryx.viewreka.bundle'
     apply plugin: 'signing'
     apply plugin: 'com.github.hierynomus.license'
 
