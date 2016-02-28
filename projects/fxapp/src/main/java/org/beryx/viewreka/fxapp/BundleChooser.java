@@ -80,7 +80,11 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         @Override public int getViewrekaVersionMinor() { return 0; }
         @Override public int getViewrekaVersionPatch() { return 0; }
         @Override public String getId() { return null; }
-        @Override public Version getVersion() { return new Version(0, 0, 0, null, false); }
+        @Override public Version getVersion() {
+            return new Version(0, 0, 0, null, false) {
+                @Override public String toString() { return "";}
+            };
+        }
         @Override public String getDescription() { return null; }
         @Override public String getUrl() { return null; }
         @Override public String getHomePage() { return null; }
