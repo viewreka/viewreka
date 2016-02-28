@@ -33,7 +33,7 @@ public class Version implements Comparable<Version> {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
-        this.label = label;
+        this.label = StringUtils.isBlank(label) ? "" : label;
         this.releaseBuild = releaseBuild;
     }
 
@@ -68,6 +68,30 @@ public class Version implements Comparable<Version> {
             versionString += "-SNAPSHOT";
         }
         return versionString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Version version = (Version) o;
+
+        if (major != version.major) return false;
+        if (minor != version.minor) return false;
+        if (patch != version.patch) return false;
+        if (releaseBuild != version.releaseBuild) return false;
+        return label != null ? label.equals(version.label) : version.label == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = major;
+        result = 31 * result + minor;
+        result = 31 * result + patch;
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        result = 31 * result + (releaseBuild ? 1 : 0);
+        return result;
     }
 
     @Override
