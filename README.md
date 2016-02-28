@@ -6,11 +6,9 @@ Viewreka is a script-based data visualization tool built on JavaFX. It introduce
 
 Get in touch with us by joining the **[Viewreka mailing list](https://groups.google.com/forum/#!forum/viewreka)**.
 
-The current release supports only relational databases accessed through JDBC. Other data sources (such as CSV or XML files) will be added in the next releases.
-
 ### Installation ###
 
-Download [the latest release](https://github.com/viewreka/viewreka/releases/download/v0.1/viewreka-0.1.0.zip) and unzip it into a directory of your choice.
+Download [the latest release](https://github.com/viewreka/viewreka/releases/download/v0.2.0/viewreka-0.2.0.zip) and unzip it into a directory of your choice.
 
 Make sure your `JAVA_HOME` environment variable correctly points to a JDK 8u40 or later.
 

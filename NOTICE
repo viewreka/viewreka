@@ -1,0 +1,51 @@
+Viewreka
+Copyright 2015-2016 Viewreka development team
+
+This product includes software developed at The Apache Software Foundation (http://www.apache.org/).
+
+
+===========================================================================
+Eclipse Public License - v 1.0 (http://www.eclipse.org/legal/epl-v10.html)
+===========================================================================
+The following components are provided under the Eclipse Public License - v 1.0. See project link for details.
+    ch.qos.logback:logback-classic (http://logback.qos.ch/)
+    ch.qos.logback:logback-core (http://logback.qos.ch/)
+
+
+===========================================================================
+The 3-Clause BSD License (https://opensource.org/licenses/BSD-3-Clause)
+===========================================================================
+The following components are provided under the 3-Clause BSD License. See project link for details.
+    org.controlsfx:controlsfx (http://www.controlsfx.org/)
+
+
+===========================================================================
+The BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+===========================================================================
+The following components are provided under the BSD 2-Clause License. See project link for details.
+    org.jfxtras:jfxtras-common (http://jfxtras.org)
+    org.jfxtras:jfxtras-controls (http://jfxtras.org)
+    org.jfxtras:jfxtras-fxml (http://jfxtras.org)
+    org.fxmisc.flowless:flowless (http://www.fxmisc.org/flowless/)
+    org.fxmisc.richtext:richtextfx (http://www.fxmisc.org/richtext/)
+    org.fxmisc.undo:undofx (http://www.fxmisc.org/undo/)
+    org.fxmisc.wellbehaved:wellbehavedfx (http://www.fxmisc.org/wellbehaved/)
+    org.jcodec:jcodec (http://jcodec.org)
+    org.reactfx:reactfx (https://github.com/TomasMikula/ReactFX)
+
+
+===========================================================================
+The MIT License (http://www.opensource.org/licenses/mit-license.php)
+===========================================================================
+The following components are provided under the  MIT License. See project link for details.
+    org.slf4j:slf4j-api (http://www.slf4j.org)
+
+
+
+===========================================================================
+The GNU LGPL 3 license (http://www.gnu.org/licenses/lgpl-3.0.txt)
+===========================================================================
+Some of the icons used by this product are from the Oxygen icon set 
+(https://www.archlinux.org/packages/extra/any/oxygen-icons/) or based on this set. 
+Oxygen icons are provided by KDE (https://www.kde.org/). See https://techbase.kde.org/Projects/Oxygen/Licensing.
+

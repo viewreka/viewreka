@@ -21,7 +21,7 @@ public class VersionInfo {
     private static final int MINOR = 2;
     private static final int PATCH = 0;
     private static final String LABEL = "";
-    private static final boolean RELEASE_BUILD = false;
+    private static final boolean RELEASE_BUILD = true;
 
     public static Version get() {
         return new Version(MAJOR, MINOR, PATCH, LABEL, RELEASE_BUILD);
