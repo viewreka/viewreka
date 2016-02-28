@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/viewreka/viewreka/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/viewreka/viewreka/blob/master/LICENSE)
 [![Build Status](https://img.shields.io/travis/viewreka/viewreka/master.svg?label=Build)](https://travis-ci.org/viewreka/viewreka)
 ## VIEWREKA ##
 
