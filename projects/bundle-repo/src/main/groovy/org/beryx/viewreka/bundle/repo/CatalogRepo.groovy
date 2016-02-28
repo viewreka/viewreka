@@ -44,7 +44,7 @@ class CatalogRepo implements BundleRepo {
                     @Override List<String> getCategories() { entry.categories }
                     @Override String getId() { entry.id }
                     @Override String getName() { entry.name }
-                    @Override Version getVersion() { entry.version }
+                    @Override Version getVersion() { new Version(entry.version.major, entry.version.minor, entry.version.patch, entry.version.label, entry.version.releaseBuild) }
                     @Override String getDescription() { entry.description }
                     @Override String getUrl() { entry.url }
                     @Override String getHomePage() { entry.homePage }
