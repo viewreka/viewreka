@@ -51,13 +51,6 @@ repositories {
 }
 
 def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
     developers {
         developer {
             id "siordache"
@@ -83,6 +76,7 @@ subprojects {
     apply plugin: 'com.github.hierynomus.license'
     apply plugin: 'com.github.jk1.dependency-license-report'
 
+
     repositories {
         jcenter()
         mavenCentral()
@@ -90,7 +84,8 @@ subprojects {
     }
 
     sourceCompatibility = 1.8
-    group = 'org.beryx'
+    group = 'org.beryx.viewreka'
+    version = viewrekaVersion
 
     def defaultEncoding = 'UTF-8'
     [compileJava, compileTestJava]*.options*.encoding = defaultEncoding
@@ -142,9 +137,8 @@ subprojects {
         excludeFilter = file("$rootProject.projectDir/findbugsExclude.xml")
     }
     jar {
-        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
         manifest {
-            attributes 'Implementation-Title': "viewreka-${project.archivesBaseName}",
+            attributes 'Implementation-Title': "${project.archivesBaseName}",
                     'Implementation-Version': viewrekaVersion,
                     'Implementation-Vendor-Id': 'beryx.org'
         }
@@ -156,7 +150,6 @@ subprojects {
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
-        baseName = "viewreka-${project.archivesBaseName}-${viewrekaVersion}"
         classifier = 'sources'
         from sourceSets.main.allSource
     }
@@ -167,13 +160,19 @@ subprojects {
                 from components.java
                 artifact sourcesJar { classifier "sources" }
                 groupId 'org.beryx.viewreka'
-                artifactId "viewreka-$project.name"
+                artifactId project.name
                 version viewrekaVersion
                 pom.withXml {
                     def root = asNode()
-                    root.appendNode('description', "The viewreka-$project.name artifact")
+                    root.appendNode('description', "The $project.name artifact")
                     root.appendNode('url', "https://github.com/viewreka/viewreka")
                     root.children().last() + pomConfig
+
+                    // We cannot configure the licenses in pomConfig due to a name conflict with the 'license' extension defined by the com.github.hierynomus.license plugin
+                    def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                    licenseNode.appendNode('name', 'The Apache Software License, Version 2.0')
+                    licenseNode.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
+                    licenseNode.appendNode('distribution', 'repo')
                 }
             }
         }
@@ -218,7 +217,6 @@ subprojects {
     /////////////  IDEA  ///////////////////
     idea {
       module {
-        outputFile = file("viewreka-${project.name}.iml")
         scopes.PROVIDED.plus += [configurations.provided]
       }
     }
@@ -254,7 +252,7 @@ ideaWorkspace {
 }
 
 
-project('core') {
+project('viewreka-core') {
     dependencies {
         compile 'org.apache.commons:commons-lang3:3.4'
     }
@@ -273,7 +271,7 @@ project('core') {
     compileJava.dependsOn configureVersionFile
 }
 
-project('fxcommons') {
+project('viewreka-fxcommons') {
     apply plugin: "com.github.hauner.jarTest"
 
     dependencies {
@@ -282,118 +280,118 @@ project('fxcommons') {
     }
 }
 
-project('bundle-util') {
+project('viewreka-bundle-util') {
     apply plugin: "com.github.hauner.jarTest"
 
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxui')
+        compile project(':viewreka-fxui')
         compile "org.codehaus.groovy:groovy-all:$groovyVersion"
-        testCompile project (path: ':fxcommons', configuration: 'testArchives')
+        testCompile project (path: ':viewreka-fxcommons', configuration: 'testArchives')
     }
 }
 
-project('bundle-repo') {
+project('viewreka-bundle-repo') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':bundle-util')
+        compile project(':viewreka-bundle-util')
     }
 }
 
-project('fxui') {
+project('viewreka-fxui') {
     dependencies {
-        compile project(':core')
-        compile project(':fxcommons')
+        compile project(':viewreka-core')
+        compile project(':viewreka-fxcommons')
         compile 'org.jfxtras:jfxtras-controls:8.0-r4'        
         compile 'org.controlsfx:controlsfx:8.40.10'
     }
 }
 
-project('fxdsl') {
+project('viewreka-fxdsl') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':bundle-repo')
-        compile project(':fxui')
+        compile project(':viewreka-bundle-repo')
+        compile project(':viewreka-fxui')
 
         compile 'org.apache.commons:commons-io:1.3.2'
     }
 }
 
-project('bundle-derby') {
+project('viewreka-bundle-derby') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':bundle-util')
+        compile project(':viewreka-bundle-util')
         compile "org.apache.derby:derby:10.12.1.1"
-        testCompile project (path: ':bundle-util', configuration: 'testArchives')
+        testCompile project (path: ':viewreka-bundle-util', configuration: 'testArchives')
     }
 }
 
-project('bundle-parameter') {
+project('viewreka-bundle-parameter') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxdsl')
+        compile project(':viewreka-fxdsl')
     }
 }
 
-project('bundle-sql') {
+project('viewreka-bundle-sql') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxdsl')
+        compile project(':viewreka-fxdsl')
     }
 }
 
-project('bundle-axis') {
+project('viewreka-bundle-axis') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxdsl')
+        compile project(':viewreka-fxdsl')
     }
 }
 
-project('bundle-chart-html') {
+project('viewreka-bundle-chart-html') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxdsl')
+        compile project(':viewreka-fxdsl')
     }
 }
 
-project('bundle-chart-xy') {
+project('viewreka-bundle-chart-xy') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
-        compile project(':fxdsl')
+        compile project(':viewreka-fxdsl')
     }
 }
 
 
-project('fxapp') {
+project('viewreka-fxapp') {
 
     apply plugin: 'application'
 
     dependencies {
-        compile project(':fxdsl')
-        compile project(':bundle-parameter')
-        compile project(':bundle-sql')
-        compile project(':bundle-axis')
-        compile project(':bundle-chart-html')
-        compile project(':bundle-chart-xy')
-        compile project(':bundle-derby')
+        compile project(':viewreka-fxdsl')
+        compile project(':viewreka-bundle-parameter')
+        compile project(':viewreka-bundle-sql')
+        compile project(':viewreka-bundle-axis')
+        compile project(':viewreka-bundle-chart-html')
+        compile project(':viewreka-bundle-chart-xy')
+        compile project(':viewreka-bundle-derby')
 
         compile 'org.fxmisc.richtext:richtextfx:0.6.10'
         compile 'org.jcodec:jcodec:0.1.9'
@@ -407,7 +405,7 @@ project('fxapp') {
 
     mainClassName = 'org.beryx.viewreka.fxapp.DslViewrekaApp'
 
-    applicationName = "viewreka-$viewrekaVersion"
+    applicationName = "viewreka"
 
     startScripts {
         defaultJvmOpts = ['-Dlogback.configurationFile=../logback.xml']
@@ -433,31 +431,31 @@ task clean << {
 
 
 def distribute(String type) {
-    def appName = project(':fxapp').applicationName
+    def appName = project(':viewreka-fxapp').applicationName
     copy {
-        from project(':fxapp').buildDir.path + '/distributions'
+        from project(':viewreka-fxapp').buildDir.path + '/distributions'
         into 'build/distributions'
         include "*.$type"
         rename { fname -> (fname != "${appName}.$type") ?: "${appName}.$type" }
     }
 }
 
-task distZip(dependsOn: ':fxapp:distZip') << {
+task distZip(dependsOn: ':viewreka-fxapp:distZip') << {
     distribute 'zip'
 }
 
-task distTar(dependsOn: ':fxapp:distTar') << {
+task distTar(dependsOn: ':viewreka-fxapp:distTar') << {
     distribute 'tar'
 }
 
-task asemble(dependsOn: ':fxapp:assemble') << {
+task asemble(dependsOn: ':viewreka-fxapp:assemble') << {
     distribute 'zip'
     distribute 'tar'
 }
 
-task installDist(dependsOn: ':fxapp:installDist') << {
+task installDist(dependsOn: ':viewreka-fxapp:installDist') << {
     copy {
-        from project(':fxapp').buildDir.path + '/install'
+        from project(':viewreka-fxapp').buildDir.path + '/install'
         into 'build/install'
    }
 }
@@ -502,7 +500,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 bintray {
     user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : "unknownUser"
     key =  project.hasProperty('bintrayKey') ? project.getProperty('bintrayKey') : "unknownKey"
-    publications = ['core', 'fxcommons', 'bundle-util', 'bundle-repo', 'fxui', 'fxdsl', 'fxapp']
+    publications = ['viewreka-core', 'viewreka-fxcommons', 'viewreka-bundle-util', 'viewreka-bundle-repo', 'viewreka-fxui', 'viewreka-fxdsl', 'viewreka-fxapp']
     pkg {
         repo = 'maven'
         name = 'viewreka'

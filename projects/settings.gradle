@@ -1,1 +1,7 @@
-include 'core', 'fxcommons', 'bundle-util', 'bundle-repo', 'fxui', 'fxdsl', 'bundle-parameter', 'bundle-sql', 'bundle-axis', 'bundle-chart-html', 'bundle-chart-xy', 'bundle-derby', 'fxapp'
+String[] modules = ['core', 'fxcommons', 'bundle-util', 'bundle-repo', 'fxui', 'fxdsl', 'bundle-parameter', 'bundle-sql', 'bundle-axis', 'bundle-chart-html', 'bundle-chart-xy', 'bundle-derby', 'fxapp']
+
+include modules
+
+modules.each { module ->
+    project(":$module").name = "viewreka-$module"
+}
