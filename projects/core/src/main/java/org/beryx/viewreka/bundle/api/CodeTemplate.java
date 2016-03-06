@@ -21,8 +21,8 @@ import java.util.List;
 
 /**
  * Code templates add support for creating code fragments and inserting them into Viewreka scripts.
- * <br/>The CodeTemplate interface is GUI agnostic, but non-trivial implementations are usually associated with a particular GUI framework (for example, JavaFx).
- * <p/>The following scenario describes the typical use case for code templates:<ul>
+ * <br>The CodeTemplate interface is GUI agnostic, but non-trivial implementations are usually associated with a particular GUI framework (for example, JavaFx).
+ * <p>The following scenario describes the typical use case for code templates:<ul>
  * <li>A code editor displays a context menu containing a series of code templates allowed in the current code context
  * (that is, code templates that can generate code fragments allowed at the current caret position).</li>
  * <li>When the user selects a code template, a dialog is displayed, which allows the user to set diverse parameters required for generating the code fragment.</li>
@@ -67,7 +67,7 @@ public interface CodeTemplate {
 
     /**
      * Provides a {@link CodeFragment} for the given configuration.
-     * <br/>Typically, this method will display a dialog allowing to set diverse parameters required for generating the code fragment.
+     * <br>Typically, this method will display a dialog allowing to set diverse parameters required for generating the code fragment.
      */
     CodeFragment getCodeFragment(Configuration configuration);
 }

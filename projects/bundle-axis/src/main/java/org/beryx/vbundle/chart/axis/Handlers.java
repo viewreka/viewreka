@@ -33,7 +33,7 @@ public class Handlers {
         @Override public Collection<java.lang.String> getAliases() { return Arrays.asList("string"); }
     }
 
-    /** The {@link AxisHandler} of <code></code> axes */
+    /** The {@link AxisHandler} of <code>int</code> axes */
     public static class Integer implements AxisHandler {
         @Override public Class<? extends Supplier<Class<?>[]>> getAliasClass() { return IntSupplier.class; }
         @Override public Collection<java.lang.String> getAliases() { return Arrays.asList("int"); }

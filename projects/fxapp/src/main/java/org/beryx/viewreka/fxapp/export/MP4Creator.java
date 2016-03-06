@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Helper class for creating MP4 files.
- * <br/>Inspired by (and using code from) <a href="https://github.com/jcodec/jcodec">jcodec samples</a>
+ * <br>Inspired by (and using code from) <a href="https://github.com/jcodec/jcodec">jcodec samples</a>
  */
 public class MP4Creator {
 	private static final Logger log = LoggerFactory.getLogger(MP4Creator.class);

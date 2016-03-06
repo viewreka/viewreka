@@ -37,7 +37,7 @@ import java.util.Iterator;
 
 /**
  * Helper class for writing animated GIFs.
- * <br/>Adapted from <a href="http://elliot.kroo.net/software/java/GifSequenceWriter">Elliot Kroo's Animated GIF Writer</a>.
+ * <br>Adapted from <a href="http://elliot.kroo.net/software/java/GifSequenceWriter">Elliot Kroo's Animated GIF Writer</a>.
  */
 public class GifSequenceWriter {
 	protected ImageWriter gifWriter;

@@ -51,6 +51,7 @@ repositories {
 }
 
 def pomConfig = {
+    url "https://github.com/viewreka/viewreka"
     developers {
         developer {
             id "siordache"
@@ -62,6 +63,12 @@ def pomConfig = {
         connection "https://github.com/viewreka/viewreka.git"
         developerConnection "https://github.com/viewreka/viewreka.git"
         url "https://github.com/viewreka/viewreka.git"
+    }
+}
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:all,-syntax,-missing', '-quiet')
     }
 }
 
@@ -149,9 +156,20 @@ subprojects {
         }
     }
 
+    configureJavadoc(javadoc)
+ 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
+    }
+    
+    task javadocJar(type: Jar, dependsOn: classes) {
+        classifier "javadoc"
+        from javadoc
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
     }
 
     publishing {
@@ -159,27 +177,24 @@ subprojects {
             "$project.name"(MavenPublication) {
                 from components.java
                 artifact sourcesJar { classifier "sources" }
+                artifact javadocJar { classifier "javadoc" }
                 groupId 'org.beryx.viewreka'
                 artifactId project.name
                 version viewrekaVersion
                 pom.withXml {
                     def root = asNode()
+                    root.appendNode('name', "Module $project.name")
                     root.appendNode('description', "The $project.name artifact")
-                    root.appendNode('url', "https://github.com/viewreka/viewreka")
                     root.children().last() + pomConfig
 
                     // We cannot configure the licenses in pomConfig due to a name conflict with the 'license' extension defined by the com.github.hierynomus.license plugin
-                    def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                    def licenseNode = root.appendNode('licenses').appendNode('license')
                     licenseNode.appendNode('name', 'The Apache Software License, Version 2.0')
                     licenseNode.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
                     licenseNode.appendNode('distribution', 'repo')
                 }
             }
         }
-    }
-
-    artifacts {
-        archives sourcesJar
     }
 
     task "create-dirs" << {
@@ -460,6 +475,38 @@ task installDist(dependsOn: ':viewreka-fxapp:installDist') << {
    }
 }
 
+def configureJavadoc(task) {
+  configure(task) {
+    if(project.configurations.hasProperty('provided')) {
+        classpath += project.configurations.provided
+    }
+    configure(options) {
+      links "http://docs.oracle.com/javase/8/docs/api/"
+      links "http://docs.groovy-lang.org/docs/groovy-$groovyVersion/html/gapi/"
+    }
+  }
+}
+
+task javadoc(type: Javadoc) {
+  title "Viewreka Documentation ($viewrekaVersion)"
+  destinationDir file("build/javadoc")
+  source subprojects.javadoc.source
+  classpath = files(subprojects.javadoc.classpath)
+}
+
+configureJavadoc(javadoc)
+
+task groovydoc(type: Groovydoc) {
+  docTitle "Viewreka Documentation ($viewrekaVersion)"
+  windowTitle "Viewreka Documentation ($viewrekaVersion)"
+  destinationDir file("build/groovydoc")
+  source subprojects.groovydoc.source
+  classpath = files(subprojects.groovydoc.classpath)
+  groovyClasspath = project(":viewreka-fxapp").groovydoc.groovyClasspath
+}
+
+
+
 def readFromConsole(prompt) {
     readFromConsole('', prompt)
 }
@@ -500,7 +547,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 bintray {
     user = project.hasProperty('bintrayUser') ? project.getProperty('bintrayUser') : "unknownUser"
     key =  project.hasProperty('bintrayKey') ? project.getProperty('bintrayKey') : "unknownKey"
-    publications = ['viewreka-core', 'viewreka-fxcommons', 'viewreka-bundle-util', 'viewreka-bundle-repo', 'viewreka-fxui', 'viewreka-fxdsl', 'viewreka-fxapp']
+    publications = subprojects.name
     pkg {
         repo = 'maven'
         name = 'viewreka'

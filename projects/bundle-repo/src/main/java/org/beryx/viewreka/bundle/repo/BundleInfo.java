@@ -46,8 +46,8 @@ public interface BundleInfo {
 
     /**
      * Provides a list of strings identifying the categories to which this bundle belongs.
-     * <br/>Most bundles belong to only one category, therefore this method will usually return a single-element list.
-     * <br/>Typical categories are: {@code chart}, {@code datasource}, {@code parameter}, and {@code other}.
+     * <br>Most bundles belong to only one category, therefore this method will usually return a single-element list.
+     * <br>Typical categories are: {@code chart}, {@code datasource}, {@code parameter}, and {@code other}.
      * It is recommended to stick with these standard categories unless you have a good reason to use a new one.
      * @return the list of categories to which this bundle belongs.
      */
@@ -72,9 +72,9 @@ public interface BundleInfo {
     /**
      * @return a suggested file name for this bundle.
      *
-     * <br/>This default implementation joins {@link #getId()} and {@link #getVersion()} using {@code "-"} as delimiter, and appends the extension {@code ".vbundle"}.
+     * <br>This default implementation joins {@link #getId()} and {@link #getVersion()} using {@code "-"} as delimiter, and appends the extension {@code ".vbundle"}.
      *
-     * <br/>{@code Example:} if {@link #getId()} returns {@code "org.example.foobar"}, and {@link #getVersion()} returns {@code "2.4.13"},
+     * <br>{@code Example:} if {@link #getId()} returns {@code "org.example.foobar"}, and {@link #getVersion()} returns {@code "2.4.13"},
      * the suggested file name will be: {@code "org.example.foobar-2.4.13.vbundle"}.
      */
     default String getFileName() {

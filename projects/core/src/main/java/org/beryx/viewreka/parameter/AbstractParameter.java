@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An abstract class that implements all methods of the {@link Parameter} interface, except {@link #getValueClass()} and {@link #toValue(String)}.
- * <br/>It adds support for specifying minimum and maximum values and for caching possible values, prerequisite parameters and affected parameters.
- * <br/>If available, a data set is used for retrieving the list of possible values.
+ * <br>It adds support for specifying minimum and maximum values and for caching possible values, prerequisite parameters and affected parameters.
+ * <br>If available, a data set is used for retrieving the list of possible values.
  * @param <T> the parameter value type
  */
 public abstract class AbstractParameter<T> implements Parameter<T> {

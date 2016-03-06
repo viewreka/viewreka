@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Each project view is characterized by a (possibly empty) set of parameters. Typically, parameters are used to configure the queries needed to retrieve the view data sets.
- * <br/>All parameters of a view belong to the same {@link ParameterGroup}.
- * <br/>A parameter may specify a list of possible values. In this case, the parameter is <em>iterable</em>.
+ * <br>All parameters of a view belong to the same {@link ParameterGroup}.
+ * <br>A parameter may specify a list of possible values. In this case, the parameter is <em>iterable</em>.
  * @param <T> the parameter value type
  */
 public interface Parameter<T> extends Parameterized, Comparable<Parameter<T>> {

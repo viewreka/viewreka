@@ -37,7 +37,7 @@ import javafx.util.Callback;
  * shown. Possible as long as the treeItem doesn't have a graphic of
  * its own.
  * <p>
- * Basic problem:
+ * Basic problem:<ul>
  * <li> TableRowSkinBase seems to be able to cope: has protected method
  *   graphicsProperty that should be implemented to return the graphic
  *   if any. That graphic is added to the children list and sized/located
@@ -61,7 +61,7 @@ import javafx.util.Callback;
  * <li> need CheckBoxTreeTableRow that sets its graphic to checkBox (or a combination
  *   of checkBox and treeItem's)
  * <li> need custom rowSkin that implements graphicProperty to return the row graphic
- *
+ * </ul>
  * @author Jeanette Winzenburg, Berlin
  *
  * @see BundleInfoNameTreeTableCell

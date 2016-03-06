@@ -27,7 +27,7 @@ public class Util {
 
 
     /**
-     * A method similar to {@link java.util.Objects#requireNonNull(T)}, but throwing a {@link ViewrekaException} if the specified object reference is null.
+     * A method similar to {@link java.util.Objects#requireNonNull(Object)}, but throwing a {@link ViewrekaException} if the specified object reference is null.
      * @param value the object reference to check for nullity
      * @param <T> the type of the reference
      * @return {@code value} if not {@code null}
@@ -41,7 +41,7 @@ public class Util {
     }
 
     /**
-     * A method similar to {@link java.util.Objects#requireNonNull(T, String)}, but throwing a customized {@link ViewrekaException} if the specified object reference is null.
+     * A method similar to {@link java.util.Objects#requireNonNull(Object, String)}, but throwing a customized {@link ViewrekaException} if the specified object reference is null.
      * @param value the object reference to check for nullity
      * @param name a name used to refer to the {@code value}. In the event that a {@code ViewrekaException} is thrown, this name will be used to customize its message.
      * @param <T> the type of the reference
@@ -82,7 +82,7 @@ public class Util {
      * @param value the value to be cast
      * @param defaultValue the default value to be returned if the cast is not possible or if the {@code value} is null and null values are not allowed.
      * @param allowNull if false and the {@code value} is null, the {@code defaultValue} will be returned.
-     * @param T the type to which the value should be cast and the type of the {@code defaultValue}.
+     * @param <T> the type to which the value should be cast and the type of the {@code defaultValue}.
      * @return the result of the cast or the {@code defaultValue} if the cast is not possible or if the value is null and null values are not allowed.
      */
     @SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public class Util {
      * @param defaultValue the default value to be returned if the map does not contain the specified {@code key} or if the retrieved value is null and {@code allowNull} is false.
      * @param key the key used to retrieve the value from the {@code keyValues} map.
      * @param allowNull if false and the retrieved value is null, the {@code defaultValue} will be returned.
-     * @param T the type of the value to be retrieved and the type of the {@code defaultValue}.
+     * @param <T> the type of the value to be retrieved and the type of the {@code defaultValue}.
      * @return the retrieved value or the {@code defaultValue} if the map does not contain the specified key or if the retrieved value is null and {@code allowNull} is false.
      */
     public static <T> T getValue(Map<?,?> keyValues, Object key, T defaultValue, boolean allowNull) {
