@@ -1,7 +1,17 @@
-String[] modules = ['core', 'fxcommons', 'bundle-util', 'bundle-repo', 'fxui', 'fxdsl', 'bundle-parameter', 'bundle-sql', 'bundle-axis', 'bundle-chart-html', 'bundle-chart-xy', 'bundle-derby', 'fxapp']
+String[] modules = [ 
+    'viewreka-core', 
+    'viewreka-fxcommons', 
+    'viewreka-bundle-util', 
+    'viewreka-bundle-repo', 
+    'viewreka-fxui', 
+    'viewreka-fxdsl', 
+    'viewreka-bundle-parameter', 
+    'viewreka-bundle-sql', 
+    'viewreka-bundle-axis', 
+    'viewreka-bundle-chart-html', 
+    'viewreka-bundle-chart-xy', 
+    'viewreka-bundle-derby', 
+    'viewreka-fxapp'
+]
 
 include modules
-
-modules.each { module ->
-    project(":$module").name = "viewreka-$module"
-}
