@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import org.beryx.viewreka.dsl.chart.AxisHandler;
-import org.beryx.viewreka.dsl.transform.AliasHandler;
 
 /**
  * Container for standard {@link AxisHandler} classes

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2015-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.vbundle.chart.html
+package org.beryx.viewreka.dsl.chart;
 
-import javafx.scene.layout.Pane
-import org.beryx.viewreka.dsl.chart.ChartHandler
-import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
+import org.beryx.viewreka.dsl.transform.AliasHandler;
+
 
 /**
- * The {@link ChartHandler} associated with the <code>html</code> and <code>htmlChart</code> aliases.
+ * The {@link AliasHandler} interface used by <code>chart</code> type aliases (such as <code>htmlChart</code> or <code>xyChart</code>).
  */
-class HtmlChartHandler implements ChartHandler<String,Pane> {
-
-    @Override
-    public Class<? extends FxChartBuilderBuilder> getAliasClass() {
-        return HtmlChartBuilderBuilder
-    }
-
-    @Override
-    public Collection<String> getAliases() {
-        return Arrays.asList("html", "htmlChart")
-    }
-
+public interface ChartHandler<D,P> extends AliasHandler<ChartBuilderBuilder<D,P>> {
+    // No additional methods
 }

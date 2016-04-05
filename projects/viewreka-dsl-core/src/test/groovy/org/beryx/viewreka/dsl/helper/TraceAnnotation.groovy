@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.vbundle.chart.html
+package org.beryx.viewreka.dsl.helper
 
-import javafx.scene.layout.Pane
-import org.beryx.viewreka.dsl.chart.ChartHandler
-import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
+import org.codehaus.groovy.transform.GroovyASTTransformationClass
 
-/**
- * The {@link ChartHandler} associated with the <code>html</code> and <code>htmlChart</code> aliases.
- */
-class HtmlChartHandler implements ChartHandler<String,Pane> {
+import java.lang.annotation.Documented
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
-    @Override
-    public Class<? extends FxChartBuilderBuilder> getAliasClass() {
-        return HtmlChartBuilderBuilder
-    }
-
-    @Override
-    public Collection<String> getAliases() {
-        return Arrays.asList("html", "htmlChart")
-    }
-
-}
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target([ElementType.TYPE])
+@GroovyASTTransformationClass(classes=TraceTransformation)
+public @interface TraceAnnotation {}

@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.vbundle.chart.html
+package org.beryx.viewreka.dsl.helper
 
-import javafx.scene.layout.Pane
-import org.beryx.viewreka.dsl.chart.ChartHandler
-import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
+import groovy.transform.Canonical
+import org.codehaus.groovy.ast.CodeVisitorSupport
+import org.codehaus.groovy.ast.expr.MethodCallExpression
 
 /**
- * The {@link ChartHandler} associated with the <code>html</code> and <code>htmlChart</code> aliases.
+ * A CodeVisitor that collects method call information
  */
-class HtmlChartHandler implements ChartHandler<String,Pane> {
+@Canonical
+class TraceVisitor extends CodeVisitorSupport {
+    final List<String> traces
 
-    @Override
-    public Class<? extends FxChartBuilderBuilder> getAliasClass() {
-        return HtmlChartBuilderBuilder
+    public void visitMethodCallExpression(MethodCallExpression call) {
+        traces << call.text
+        super.visitMethodCallExpression(call)
     }
-
-    @Override
-    public Collection<String> getAliases() {
-        return Arrays.asList("html", "htmlChart")
-    }
-
 }

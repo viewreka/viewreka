@@ -17,7 +17,6 @@ package org.beryx.viewreka.dsl.project
 
 import groovy.util.logging.Slf4j
 import org.apache.commons.io.FilenameUtils
-import org.beryx.viewreka.bundle.api.ViewrekaBundle
 import org.beryx.viewreka.core.ViewrekaException
 import org.beryx.viewreka.dsl.ViewrekaClassLoader
 import org.beryx.viewreka.dsl.ViewrekaScript

@@ -324,12 +324,21 @@ project('viewreka-fxui') {
     }
 }
 
-project('viewreka-fxdsl') {
+project('viewreka-dsl-core') {
     sourceSets.main.java.srcDirs = []
     sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
     dependencies {
         compile project(':viewreka-bundle-repo')
+    }
+}
+
+project('viewreka-fxdsl') {
+    sourceSets.main.java.srcDirs = []
+    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
+
+    dependencies {
+        compile project(':viewreka-dsl-core')
         compile project(':viewreka-fxui')
 
         compile 'org.apache.commons:commons-io:1.3.2'

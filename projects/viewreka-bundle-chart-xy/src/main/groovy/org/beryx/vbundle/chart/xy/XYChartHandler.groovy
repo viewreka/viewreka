@@ -16,20 +16,21 @@
 package org.beryx.vbundle.chart.xy
 
 import groovy.util.logging.Slf4j
-
+import javafx.scene.layout.Pane
 import org.beryx.viewreka.dsl.chart.AxisHandler
 import org.beryx.viewreka.dsl.chart.ChartHandler
 import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
 import org.beryx.viewreka.dsl.transform.AliasHandler
 import org.beryx.viewreka.dsl.transform.Keyword
 import org.beryx.viewreka.dsl.transform.KeywordVisitor
+import org.beryx.viewreka.fxui.chart.xy.XYChartData
 import org.codehaus.groovy.ast.GroovyCodeVisitor
 
 /**
  * The {@link ChartHandler} associated with the <code>xy</code> and <code>xyChart</code> aliases.
  */
 @Slf4j
-public class XYChartHandler implements ChartHandler {
+public class XYChartHandler implements ChartHandler<XYChartData,Pane> {
 	private static AxisKeyword X_AXIS_KEYWORD = new AxisKeyword() {@Override public String getName() { return "xAxis"; }}
 	private static AxisKeyword Y_AXIS_KEYWORD = new AxisKeyword() {@Override public String getName() { return "yAxis"; }}
 

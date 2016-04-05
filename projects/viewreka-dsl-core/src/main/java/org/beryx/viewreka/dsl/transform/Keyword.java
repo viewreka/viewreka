@@ -69,7 +69,7 @@ public interface Keyword {
     public static class Chart implements Keyword {
         private static final Map<String, Class<? extends AliasHandler<?>>> aliasHandlers = new LinkedHashMap<>();
         static {
-            aliasHandlers.put("type", ChartHandler.class);
+            aliasHandlers.put("type", (Class<? extends AliasHandler<?>>)(Class)ChartHandler.class);
 //			aliasHandlers.put("dataset", ToStringHandler.class);
             aliasHandlers.put("parameter", ToStringHandler.class);
         }

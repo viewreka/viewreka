@@ -64,7 +64,7 @@ abstract class ViewrekaScript extends Script {
     def datasource(String name, Map options, Closure closure) {
         if(project.dataSources.containsKey(name)) throw new ViewrekaException("Duplicate data source: $name")
         Class<? extends DataSourceBuilder> type = options?.type
-        if(!type) throw new ViewrekaException("Missing type in satasource $name")
+        if(!type) throw new ViewrekaException("Missing type in datasource $name")
         def builder = type.getConstructor().newInstance()
         def ds = builder.build(name, closure)
         project.dataSources[name] = ds

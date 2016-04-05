@@ -3,6 +3,7 @@ String[] modules = [
     'viewreka-fxcommons', 
     'viewreka-bundle-util', 
     'viewreka-bundle-repo', 
+    'viewreka-dsl-core', 
     'viewreka-fxui', 
     'viewreka-fxdsl', 
     'viewreka-bundle-parameter', 

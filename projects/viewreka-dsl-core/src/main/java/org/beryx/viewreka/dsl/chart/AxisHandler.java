@@ -15,8 +15,6 @@
  */
 package org.beryx.viewreka.dsl.chart;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.function.Supplier;
 
 import org.beryx.viewreka.dsl.transform.AliasHandler;

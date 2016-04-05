@@ -17,15 +17,16 @@ package org.beryx.vbundle.chart.xy
 
 import org.beryx.viewreka.dsl.chart.FxChartBuilderBuilder
 import org.beryx.viewreka.fxui.chart.xy.XYChartBuilder
+import org.beryx.viewreka.fxui.chart.xy.XYChartData
 import org.beryx.viewreka.model.DatasetProvider
 import org.beryx.viewreka.parameter.Parameter
 
 /**
  * A builder for {@link XYChartBuilder}s.
  */
-class XYChartBuilderBuilder implements FxChartBuilderBuilder {
+class XYChartBuilderBuilder<X,Y> implements FxChartBuilderBuilder<XYChartData<X,Y>> {
 	@Override
-	public <X,Y> XYChartBuilder<X,Y> build(String chartName, Closure closure, Parameter<?> chartParameter, Map<String, DatasetProvider> currentDataSetProviders) {
+	public XYChartBuilder<X,Y> build(String chartName, Closure closure, Parameter<?> chartParameter, Map<String, DatasetProvider> currentDataSetProviders) {
 		XYChartBuilder<X,Y> xyChartBuilder = new XYChartBuilder<>()
 		def chartDelegate = new XYChartDelegate(chartName, currentDataSetProviders, xyChartBuilder)
 		closure.delegate = chartDelegate

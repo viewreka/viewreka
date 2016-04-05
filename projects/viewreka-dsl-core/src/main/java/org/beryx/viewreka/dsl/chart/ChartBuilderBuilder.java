@@ -15,12 +15,13 @@
  */
 package org.beryx.viewreka.dsl.chart;
 
-import org.beryx.viewreka.dsl.transform.AliasHandler;
+import groovy.lang.Closure;
+import org.beryx.viewreka.chart.ChartBuilder;
+import org.beryx.viewreka.model.DatasetProvider;
+import org.beryx.viewreka.parameter.Parameter;
 
+import java.util.Map;
 
-/**
- * The {@link AliasHandler} interface used by <code>chart</code> type aliases (such as <code>htmlChart</code> or <code>xyChart</code>).
- */
-public interface ChartHandler extends AliasHandler<FxChartBuilderBuilder>{
-    // No additional methods
+public interface ChartBuilderBuilder<D,P> {
+    ChartBuilder<D,P> build(String chartName, Closure closure, Parameter<?> chartParameter, Map<String, DatasetProvider> currentDataSetProviders);
 }
