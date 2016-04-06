@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * The context associated with a specific position in the code.
- * <br/>Typical example: the code context associated with the current caret position in the code editor.
+ * <br>Typical example: the code context associated with the current caret position in the code editor.
  */
 public interface CodeContext {
     /** @return a keyword chain describing the code context at the current caret position */

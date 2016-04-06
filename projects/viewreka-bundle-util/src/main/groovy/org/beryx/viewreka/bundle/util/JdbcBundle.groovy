@@ -64,7 +64,7 @@ abstract class JdbcBundle extends AbstractFxBundle {
             )
             .withDescription("Declare $name")
             .withParameter("dsName", "data source name", "$sampleDataSourceName", false)
-            .withParameter("connection", "JDBC connection string", "$sampleConnectionString", false)
+            .withParameter("connection", "JDBC connection string", "$sampleConnectionString", false, 320)
             .withParameter("user", "user name", "$sampleUser", true)
             .withParameter(new SimpleParameter.Builder("password", "$samplePassword")
                     .withDescription("user password")

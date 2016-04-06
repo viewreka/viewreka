@@ -15,6 +15,7 @@
  */
 package org.beryx.viewreka.bundle.util
 
+import javafx.application.Platform
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
@@ -39,9 +40,9 @@ class ParameterConfigPane extends GridPane {
     ParameterConfigPane(Window window, ParameterizedTemplate template) {
         this.template = template
 
-        ColumnConstraints col1 = new ColumnConstraints(60, -1, Double.MAX_VALUE)
+        ColumnConstraints col1 = new ColumnConstraints(60, USE_COMPUTED_SIZE, Double.MAX_VALUE)
         col1.hgrow = Priority.SOMETIMES
-        ColumnConstraints col2 = new ColumnConstraints(80, 240, Double.MAX_VALUE)
+        ColumnConstraints col2 = new ColumnConstraints(120, USE_COMPUTED_SIZE, Double.MAX_VALUE)
         col2.hgrow = Priority.ALWAYS
         columnConstraints.addAll(col1, col2)
 
@@ -65,6 +66,9 @@ class ParameterConfigPane extends GridPane {
             Class<? extends Control> ctrlType = prm.controlType
             try {
                 Node control = ctrlType.getConstructor().newInstance()
+                if(prm.controlMinWidth > 0) {
+                    control.setMinWidth(prm.controlMinWidth)
+                }
                 control.id = "prm-$prm.name"
                 prm.textSetter.accept(control, prm.sampleValue)
                 if(control.hasProperty('tooltip')) {
@@ -97,6 +101,7 @@ class ParameterConfigPane extends GridPane {
         hbBtn.children.add(butOk)
         hbBtn.children.add(butCancel)
         add(hbBtn, 1, template.parameters.size() + 2)
+        window.sizeToScene()
     }
 
     protected boolean readControlValues(List<Node> controls, Map<String, String> values) {

@@ -37,6 +37,7 @@ class SimpleCodeFragment implements CodeTemplate.CodeFragment {
      * @param caretPositionMarker the marker used to show the caret position in the code
      */
     SimpleCodeFragment(String code, String caretPositionMarker) {
+        if(!code) code = ""
         this.caretPosition = code.indexOf(caretPositionMarker)
         this.code = (this.caretPosition < 0) ? code : code.replace(caretPositionMarker, "")
     }

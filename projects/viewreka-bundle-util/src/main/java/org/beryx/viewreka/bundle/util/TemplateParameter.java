@@ -46,6 +46,10 @@ public interface TemplateParameter {
 
     Class<? extends Node> getControlType();
 
+    default double getControlMinWidth() {
+        return -1;
+    }
+
     Function<Node, String> getTextGetter();
 
     BiConsumer<Node, String> getTextSetter();

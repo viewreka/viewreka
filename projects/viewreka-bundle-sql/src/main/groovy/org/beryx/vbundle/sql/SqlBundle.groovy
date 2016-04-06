@@ -39,7 +39,7 @@ class SqlBundle extends AbstractFxBundle {
                 )
                         .withDescription("Declare $name")
                         .withParameter("dsName", "dataset name", "dsSomething", false)
-                        .withParameter("query", "SQL query", "'select * from my_table'", false)
+                        .withParameter("query", "SQL query", "'select * from my_table'", false, 320)
                         .build()
         ]
     }

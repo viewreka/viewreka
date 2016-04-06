@@ -29,6 +29,7 @@ public class SimpleParameter implements TemplateParameter {
     final boolean optional
     final List<Function<String, String>> validators
     final Class<? extends Node> controlType
+    final double controlMinWidth
     final Function<Node, String> textGetter
     final BiConsumer<Node, String> textSetter
 
@@ -39,6 +40,7 @@ public class SimpleParameter implements TemplateParameter {
         private boolean optional = false
         private List<Function<String, String>> validators = []
         private Class<? extends Node> controlType = TextField
+        private double controlMinWidth = -1
         private Function<Node, String> textGetter = {field -> field.text }
         private BiConsumer<Node, String> textSetter = {field, txt -> field.text = txt}
 
@@ -117,14 +119,19 @@ public class SimpleParameter implements TemplateParameter {
             this
         }
 
+        public <C extends Node> Builder withControlMinWidth(double width) {
+            this.controlMinWidth = width
+            this
+        }
+
         public SimpleParameter build() {
             String descr = (description != null) ? description : name
-            new SimpleParameter(name, descr, sampleValue, optional, validators, controlType, textGetter, textSetter)
+            new SimpleParameter(name, descr, sampleValue, optional, validators, controlType, controlMinWidth, textGetter, textSetter)
         }
     }
 
     private SimpleParameter(String name, String description, String sampleValue, boolean optional,
-                            List<Function<String, String>> validators, Class<? extends Node> controlType,
+                            List<Function<String, String>> validators, Class<? extends Node> controlType, double controlMinWidth,
                             Function<Node, String> textGetter, BiConsumer<Node, String> textSetter) {
         this.name = name
         this.description = description
@@ -132,6 +139,7 @@ public class SimpleParameter implements TemplateParameter {
         this.optional = optional
         this.validators = Collections.unmodifiableList(validators)
         this.controlType = controlType
+        this.controlMinWidth = controlMinWidth
         this.textGetter = textGetter
         this.textSetter = textSetter
     }

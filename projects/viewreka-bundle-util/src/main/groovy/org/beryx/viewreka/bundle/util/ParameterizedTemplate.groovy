@@ -76,8 +76,9 @@ class ParameterizedTemplate extends KeywordPathTemplate {
             return this
         }
 
-        Builder withParameter(String name, String description, String sampleValue, boolean optional) {
-            this.parameters.add(new SimpleParameter.Builder(name, sampleValue).withDescription(description).withOptional(optional).build())
+        Builder withParameter(String name, String description, String sampleValue, boolean optional, double controlMinWidth = -1) {
+            this.parameters.add(new SimpleParameter.Builder(name,
+                    sampleValue).withDescription(description).withOptional(optional).withControlMinWidth(controlMinWidth).build())
             this
         }
 
@@ -172,7 +173,7 @@ class ParameterizedTemplate extends KeywordPathTemplate {
 
     protected Map<String, String> readParameterValues(CodeTemplate.Configuration configuration) {
         Stage stage = new Stage()
-        stage.initStyle(StageStyle.UNDECORATED)
+        stage.initStyle(StageStyle.UTILITY)
         stage.initModality(Modality.APPLICATION_MODAL)
         stage.title = name
 
@@ -183,6 +184,7 @@ class ParameterizedTemplate extends KeywordPathTemplate {
             stage.setX(configuration.preferredDialogCoordinates[0])
             stage.setY(configuration.preferredDialogCoordinates[1])
         }
+        stage.setOnShown {ev -> stage.minWidth = stage.width; stage.minHeight = stage.height}
         stage.showAndWait()
 
         cfgPane.values
