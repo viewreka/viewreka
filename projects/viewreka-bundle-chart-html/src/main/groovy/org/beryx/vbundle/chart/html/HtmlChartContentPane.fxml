@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?scenebuilder-stylesheet ../../../../../resources/viewreka.css?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox alignment="TOP_RIGHT" BorderPane.alignment="CENTER">
+         <children>
+             <RadioButton fx:id="optFile" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" selected="true" text="From file">
+               <toggleGroup>
+                  <ToggleGroup fx:id="contentType" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="optUrl" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="From URL" toggleGroup="$contentType" />
+            <RadioButton fx:id="optInline" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="Inline" toggleGroup="$contentType" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="hboxFile" alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="txtFile" />
+                  <Button fx:id="butFile" mnemonicParsing="false" onAction="#chooseFile" text="..." />
+               </children>
+            </HBox>
+            <HBox fx:id="hboxUrl" alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="txtUrl" text="https://" />
+               </children>
+            </HBox>
+             <HBox fx:id="hboxInline" alignment="CENTER_LEFT">
+                 <children>
+                     <TextField fx:id="txtInline" text="&lt;h1&gt;Hello&lt;/h1&gt;" />
+                 </children>
+             </HBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets left="10.0" />
+         </BorderPane.margin>
+      </StackPane>
+   </center>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</fx:root>

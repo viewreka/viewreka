@@ -17,6 +17,7 @@ package org.beryx.viewreka.bundle.util
 
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Control
 import javafx.scene.control.Label
@@ -54,7 +55,7 @@ class ParameterConfigPane extends GridPane {
         title.font = Font.font("Tahoma", FontWeight.NORMAL, 20)
         add(title, 0, 0, 2, 1)
 
-        List<Control> controls = []
+        List<Node> controls = []
         for(int i=0; i < template.parameters.size(); i++) {
             TemplateParameter prm = template.parameters[i]
             Label lb = new Label(prm.name)
@@ -63,10 +64,12 @@ class ParameterConfigPane extends GridPane {
 
             Class<? extends Control> ctrlType = prm.controlType
             try {
-                Control control = ctrlType.getConstructor().newInstance()
+                Node control = ctrlType.getConstructor().newInstance()
                 control.id = "prm-$prm.name"
                 prm.textSetter.accept(control, prm.sampleValue)
-                control.tooltip = new Tooltip(prm.description)
+                if(control.hasProperty('tooltip')) {
+                    control.tooltip = new Tooltip(prm.description)
+                }
                 add(control, 1, i+1)
                 controls.add(control)
             } catch (Exception e) {
@@ -96,10 +99,10 @@ class ParameterConfigPane extends GridPane {
         add(hbBtn, 1, template.parameters.size() + 2)
     }
 
-    protected boolean readControlValues(List<Control> controls, Map<String, String> values) {
+    protected boolean readControlValues(List<Node> controls, Map<String, String> values) {
         for(int i=0; i < template.parameters.size(); i++) {
             TemplateParameter prm = template.parameters[i]
-            Control control = controls[i]
+            Node control = controls[i]
             String val = prm.textGetter.apply(control)
             String errMsg = prm.getValidationErrorMessage(val)
             if(errMsg != null) {

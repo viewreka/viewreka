@@ -15,22 +15,22 @@
  */
 package org.beryx.viewreka.bundle.util
 
-import javafx.scene.control.Control
+import javafx.scene.Node
 import javafx.scene.control.TextField
 import org.codehaus.groovy.tools.Utilities
 
 import java.util.function.BiConsumer
 import java.util.function.Function
 
-public class SimpleParameter<C extends Control> implements TemplateParameter {
+public class SimpleParameter implements TemplateParameter {
     final String name
     final String description
     final String sampleValue
     final boolean optional
     final List<Function<String, String>> validators
-    final Class<? extends Control> controlType
-    final Function<Control, String> textGetter
-    final BiConsumer<Control, String> textSetter
+    final Class<? extends Node> controlType
+    final Function<Node, String> textGetter
+    final BiConsumer<Node, String> textSetter
 
     public static class Builder {
         private final String name
@@ -38,9 +38,9 @@ public class SimpleParameter<C extends Control> implements TemplateParameter {
         private String description
         private boolean optional = false
         private List<Function<String, String>> validators = []
-        private Class<? extends Control> controlType = TextField
-        private Function<Control, String> textGetter = {field -> field.text }
-        private BiConsumer<Control, String> textSetter = {field, txt -> field.text = txt}
+        private Class<? extends Node> controlType = TextField
+        private Function<Node, String> textGetter = {field -> field.text }
+        private BiConsumer<Node, String> textSetter = {field, txt -> field.text = txt}
 
         public Builder(String name, String sampleValue) {
             this.name = name
@@ -95,14 +95,14 @@ public class SimpleParameter<C extends Control> implements TemplateParameter {
             withLongValidator(Integer.MIN_VALUE, Integer.MAX_VALUE)
         }
 
-        public <C extends Control> Builder withControl(Class<C> controlType, Function<C, String> textGetter, BiConsumer<C, String> textSetter) {
+        public <C extends Node> Builder withControl(Class<C> controlType, Function<C, String> textGetter, BiConsumer<C, String> textSetter) {
             this.controlType = controlType
             this.textGetter = textGetter
             this.textSetter = textSetter
             this
         }
 
-        public Builder withTextGetter(Function<Control, String> textGetter) {
+        public Builder withTextGetter(Function<Node, String> textGetter) {
             this.textGetter = textGetter
             this
         }
@@ -112,7 +112,7 @@ public class SimpleParameter<C extends Control> implements TemplateParameter {
             this
         }
 
-        public Builder withTextSetter(BiConsumer<Control, String> textSetter) {
+        public Builder withTextSetter(BiConsumer<Node, String> textSetter) {
             this.textSetter = textSetter
             this
         }
@@ -124,8 +124,8 @@ public class SimpleParameter<C extends Control> implements TemplateParameter {
     }
 
     private SimpleParameter(String name, String description, String sampleValue, boolean optional,
-                            List<Function<String, String>> validators, Class<? extends Control> controlType,
-                            Function<Control, String> textGetter, BiConsumer<Control, String> textSetter) {
+                            List<Function<String, String>> validators, Class<? extends Node> controlType,
+                            Function<Node, String> textGetter, BiConsumer<Node, String> textSetter) {
         this.name = name
         this.description = description
         this.sampleValue = sampleValue

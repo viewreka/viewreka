@@ -19,6 +19,7 @@ import org.beryx.viewreka.bundle.api.CodeTemplate
 import org.beryx.viewreka.bundle.api.ViewrekaBundle
 import org.beryx.viewreka.bundle.util.AbstractFxBundle
 import org.beryx.viewreka.bundle.util.ParameterizedTemplate
+import org.beryx.viewreka.bundle.util.SimpleParameter
 import org.beryx.viewreka.core.Version
 
 @Slf4j
@@ -39,7 +40,9 @@ class HtmlChartBundle extends AbstractFxBundle {
                 )
                         .withDescription("Declare $name")
                         .withParameter("chartName", "chart name", "chartSomething", false)
-                        .withParameter("htmlContent", "HTML content", "'<h1>Hello</h1>'", false)
+                        .withParameter(new SimpleParameter.Builder("htmlContent", "<h1>Hello</h1>")
+                            .withControl(HtmlChartContentPane, {pane -> pane.content}, {pane,content -> pane.setInlineContent(content)})
+                            .build())
                         .build()
         ]
     }

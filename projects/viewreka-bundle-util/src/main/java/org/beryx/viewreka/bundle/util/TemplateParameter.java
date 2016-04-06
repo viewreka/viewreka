@@ -15,7 +15,7 @@
  */
 package org.beryx.viewreka.bundle.util;
 
-import javafx.scene.control.Control;
+import javafx.scene.Node;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -44,9 +44,9 @@ public interface TemplateParameter {
      */
     String getValidationErrorMessage(String value);
 
-    Class<? extends Control> getControlType();
+    Class<? extends Node> getControlType();
 
-    Function<Control, String> getTextGetter();
+    Function<Node, String> getTextGetter();
 
-    BiConsumer<Control, String> getTextSetter();
+    BiConsumer<Node, String> getTextSetter();
 }
