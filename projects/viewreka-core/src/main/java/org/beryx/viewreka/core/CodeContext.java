@@ -1,5 +1,5 @@
-/*
- * Copyright 2015-2016 the original author or authors.
+/**
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.viewreka.bundle.util
+package org.beryx.viewreka.core;
 
-import groovy.transform.Canonical
-import org.beryx.viewreka.bundle.api.CodeTemplate
-import org.beryx.viewreka.core.CodeContext
-import org.beryx.viewreka.model.ProjectModel
+import java.util.List;
 
-@Canonical class SimpleConfiguration implements CodeTemplate.Configuration {
-    final ProjectModel<?> projectModel
-    final CodeContext context
-    final double[] preferredDialogCoordinates
+/**
+ * The context associated with a specific position in the code.
+ * <br/>Typical example: the code context associated with the current caret position in the code editor.
+ */
+public interface CodeContext {
+    /** @return a keyword chain describing the code context at the current caret position */
+    List<String> getKeywordChain();
 }

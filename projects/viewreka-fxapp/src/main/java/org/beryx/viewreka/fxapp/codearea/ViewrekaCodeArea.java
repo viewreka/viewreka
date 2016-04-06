@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.beryx.viewreka.bundle.api.CodeTemplate;
 import org.beryx.viewreka.bundle.util.SimpleConfiguration;
 import org.beryx.viewreka.bundle.util.SimpleContext;
+import org.beryx.viewreka.core.CodeContext;
 import org.beryx.viewreka.fxapp.ClassLoaderManager;
 import org.beryx.viewreka.model.ProjectModel;
 import org.fxmisc.richtext.PopupAlignment;
@@ -63,6 +64,8 @@ public class ViewrekaCodeArea extends SimpleCodeArea {
 
     private ProjectModel<?> projectModel;
 
+    private double[] codeTemplatesCoordinates;
+
     public ViewrekaCodeArea() {
         applyConfiguration(CONFIG);
 
@@ -70,6 +73,7 @@ public class ViewrekaCodeArea extends SimpleCodeArea {
         setPopupWindow(cm);
         setPopupAlignment(PopupAlignment.CARET_BOTTOM);
         setPopupAnchorOffset(new Point2D(-20, 1));
+        cm.setOnShown(ev -> codeTemplatesCoordinates = new double[]{cm.getX(), cm.getY()});
 
         EventHandler<? super KeyEvent> tabHandler = EventHandlerHelper
                 .on(EventPattern.keyPressed(KeyCode.SPACE, KeyCombination.CONTROL_DOWN)).act(ev -> showContextMenu(cm))
@@ -112,12 +116,12 @@ public class ViewrekaCodeArea extends SimpleCodeArea {
         cm.show(getScene().getWindow());
     }
 
-    protected CodeTemplate.Context getCodeTemplateContext() {
+    protected CodeContext getCodeTemplateContext() {
         return new SimpleContext();
     }
 
     protected CodeTemplate.Configuration getCodeTemplateConfiguration() {
-        return new SimpleConfiguration(projectModel, getCodeTemplateContext());
+        return new SimpleConfiguration(projectModel, getCodeTemplateContext(), codeTemplatesCoordinates);
     }
 
     public void insertCodeFragment(CodeTemplate template) {

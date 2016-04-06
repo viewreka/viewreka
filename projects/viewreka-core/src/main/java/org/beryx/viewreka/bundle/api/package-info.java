@@ -1,5 +1,5 @@
-/*
- * Copyright 2015-2016 the original author or authors.
+/**
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.viewreka.bundle.util
-
-import groovy.transform.Canonical
-import org.beryx.viewreka.bundle.api.CodeTemplate
-import org.beryx.viewreka.core.CodeContext
-import org.beryx.viewreka.model.ProjectModel
-
-@Canonical class SimpleConfiguration implements CodeTemplate.Configuration {
-    final ProjectModel<?> projectModel
-    final CodeContext context
-    final double[] preferredDialogCoordinates
-}
+/**
+ * The package containing the bundle API. The interfaces in this package are UI-agnostic.
+ */
+package org.beryx.viewreka.bundle.api;

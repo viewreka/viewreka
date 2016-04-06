@@ -29,14 +29,14 @@ import javafx.scene.layout.Priority
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import javafx.scene.text.Text
-import javafx.stage.Stage
+import javafx.stage.Window
 import org.beryx.viewreka.fxcommons.Dialogs
 
 class ParameterConfigPane extends GridPane {
     final ParameterizedTemplate template
     final Map<String, String> values = [:]
 
-    ParameterConfigPane(Stage stage, ParameterizedTemplate template) {
+    ParameterConfigPane(Window window, ParameterizedTemplate template) {
         this.template = template
 
         ColumnConstraints col1 = new ColumnConstraints(60, -1, Double.MAX_VALUE)
@@ -82,7 +82,7 @@ class ParameterConfigPane extends GridPane {
         butOk.defaultButton = true
         butOk.onAction = {event ->
             if(readControlValues(controls, values) && checkValues(values)) {
-                stage.close()
+                window.close()
             } else {
                 values.clear()
             }
@@ -90,7 +90,7 @@ class ParameterConfigPane extends GridPane {
 
         Button butCancel = new Button("Cancel")
         butCancel.id = "butCancel"
-        butCancel.onAction = {event -> stage.close()}
+        butCancel.onAction = {event -> window.close()}
 
         HBox hbBtn = new HBox(10)
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT)

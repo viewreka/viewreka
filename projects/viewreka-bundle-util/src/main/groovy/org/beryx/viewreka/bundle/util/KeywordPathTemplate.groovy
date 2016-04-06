@@ -15,7 +15,7 @@
  */
 package org.beryx.viewreka.bundle.util
 
-import org.beryx.viewreka.bundle.api.CodeTemplate
+import org.beryx.viewreka.core.CodeContext
 
 abstract class KeywordPathTemplate extends AbstractTemplate {
     final String keyword
@@ -49,7 +49,7 @@ abstract class KeywordPathTemplate extends AbstractTemplate {
     }
 
     @Override
-    boolean isAllowedInContext(CodeTemplate.Context context) {
+    boolean isAllowedInContext(CodeContext context) {
         List<String> keywordChain = context.keywordChain
         if(keywordChain == null) return true
         return allowedKeywordChain.equals(keywordChain)

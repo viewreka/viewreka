@@ -15,9 +15,8 @@
  */
 package org.beryx.viewreka.bundle.api;
 
+import org.beryx.viewreka.core.CodeContext;
 import org.beryx.viewreka.model.ProjectModel;
-
-import java.util.List;
 
 /**
  * Code templates add support for creating code fragments and inserting them into Viewreka scripts.
@@ -40,14 +39,15 @@ public interface CodeTemplate {
         int getCaretPosition();
     }
 
-    public static interface Context {
-        /** @return a keyword chain describing the code context at the current caret position */
-        List<String> getKeywordChain();
-    }
-
     public static interface Configuration {
         ProjectModel<?> getProjectModel();
-        Context getContext();
+        CodeContext getContext();
+
+        /**
+         * @return an array with two elements representing the preferred x and y coordinates of the dialog used for configuring the code fragment;
+         * or null, if there is no preferred position.
+         */
+        double[] getPreferredDialogCoordinates();
     }
 
     /** @return the name of this code template, which will be displayed in the code area's context menu */
@@ -63,7 +63,7 @@ public interface CodeTemplate {
     String getKeyword();
 
     /** @return true, if this template is allowed in the code context provided as argument */
-    boolean isAllowedInContext(Context context);
+    boolean isAllowedInContext(CodeContext context);
 
     /**
      * Provides a {@link CodeFragment} for the given configuration.

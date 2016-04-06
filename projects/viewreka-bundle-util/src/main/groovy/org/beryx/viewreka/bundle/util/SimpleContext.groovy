@@ -15,9 +15,9 @@
  */
 package org.beryx.viewreka.bundle.util
 
-import org.beryx.viewreka.bundle.api.CodeTemplate
+import org.beryx.viewreka.core.CodeContext
 
-public class SimpleContext implements CodeTemplate.Context {
+public class SimpleContext implements CodeContext {
     final List<String> keywordChain = []
 
     @Override

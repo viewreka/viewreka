@@ -161,7 +161,7 @@ class ParameterizedTemplate extends KeywordPathTemplate {
     @Override
     public CodeTemplate.CodeFragment getCodeFragment(CodeTemplate.Configuration configuration) {
         if(parameters.isEmpty()) return new SimpleCodeFragment(template, caretPositionMarker)
-        Map<String, String> values = readParameterValues()
+        Map<String, String> values = readParameterValues(configuration)
         new SimpleCodeFragment(mergeTemplate(values), caretPositionMarker)
     }
 
@@ -170,15 +170,19 @@ class ParameterizedTemplate extends KeywordPathTemplate {
         getMergedTemplate(template, parameterRegex, excludeLinesWithMissingValues, parameters, values)
     }
 
-    protected Map<String, String> readParameterValues() {
+    protected Map<String, String> readParameterValues(CodeTemplate.Configuration configuration) {
         Stage stage = new Stage()
-        stage.initStyle(StageStyle.UTILITY)
+        stage.initStyle(StageStyle.UNDECORATED)
         stage.initModality(Modality.APPLICATION_MODAL)
         stage.title = name
 
         ParameterConfigPane cfgPane = new ParameterConfigPane(stage, this)
         Scene scene = new Scene(cfgPane)
         stage.scene = scene
+        if(configuration.preferredDialogCoordinates) {
+            stage.setX(configuration.preferredDialogCoordinates[0])
+            stage.setY(configuration.preferredDialogCoordinates[1])
+        }
         stage.showAndWait()
 
         cfgPane.values
