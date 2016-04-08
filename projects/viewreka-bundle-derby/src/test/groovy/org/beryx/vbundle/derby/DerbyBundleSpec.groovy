@@ -37,7 +37,7 @@ class DerbyBundleSpec extends AbstractParameterizedTemplateSpec {
         def invalidConnString = 'jdbc:derby:__inexistent_-_dir__/mydb'
 
         when: "using the invalid connection string"
-        fx.lookup('#prm-connection').queryFirst().text = invalidConnString
+        fx.lookup('#prm-connection').query().text = invalidConnString
 
         and: "click the OK button"
         fx.clickOn '#butOk'

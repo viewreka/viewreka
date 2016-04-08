@@ -99,11 +99,11 @@ class ParameterizedTemplateSpec extends AbstractParameterizedTemplateSpec {
 
     def "should omit lines related to optional parameters with no value"() {
         when: "Change the port to 1522 in the connection string"
-        fx.lookup('#prm-connection').queryFirst().text = 'jdbc:oracle:thin:@localhost:1522:orcl'
+        fx.lookup('#prm-connection').query().text = 'jdbc:oracle:thin:@localhost:1522:orcl'
         and: "clear the user field"
-        fx.lookup('#prm-user').queryFirst().clear()
+        fx.lookup('#prm-user').query().clear()
         and: "clear the password field"
-        fx.lookup('#prm-password').queryFirst().clear()
+        fx.lookup('#prm-password').query().clear()
         and: "click the OK button"
         fx.clickOn '#butOk'
 
