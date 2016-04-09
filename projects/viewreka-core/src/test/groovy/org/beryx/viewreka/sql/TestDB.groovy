@@ -20,9 +20,9 @@ import org.beryx.viewreka.sql.util.DerbyDB
 class TestDB extends DerbyDB {
     TestDB(String dbName, String user, String password, String statements) {
         super(createDbPath(dbName), user, password)
-        withCreationStrategy(true, true)
+        withDefaultCreateAndDeleteStrategy()
         withCreationStatements(statements)
-        create()
+        create(null)
     }
 
     static String createDbPath(String dbName) {
@@ -31,5 +31,11 @@ class TestDB extends DerbyDB {
         dbDir.deleteDir()
         assert !dbDir.exists()
         dbDir.path.replaceAll('\\\\', '/')
+    }
+
+    @Override protected boolean shouldDeleteDBDirectoryOnError(Exception e) { true }
+
+    String getUrl() {
+        getUrlForCreationOption(urlOptionIfExists)
     }
 }

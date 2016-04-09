@@ -50,11 +50,14 @@ class DerbyCatalogCache implements CatalogCache {
 
     final DerbyDB cacheDB
 
+    CatalogCache.ErrorReporter errorReporter = {message, t -> log.warn(message, t)}
+
     DerbyCatalogCache(String cacheDbPath) {
         this.cacheDB = new DerbyDB(cacheDbPath, '', '')
-                .withCreationStrategy(true, true)
+                .withDefaultCreateAndDeleteStrategy()
                 .withCreationStatements(CREATION_STATEMENTS)
     }
+
 
     @Override
     List<BundleInfo> getEntries(String catalogUrl) {
@@ -68,7 +71,7 @@ class DerbyCatalogCache implements CatalogCache {
                 }
             }
         } catch (Exception e) {
-            log.warn("Failed to retrieve entries for catalog $catalogUrl", e)
+            errorReporter.report("Failed to retrieve entries for catalog $catalogUrl", e)
         }
         return entries
     }
@@ -79,12 +82,16 @@ class DerbyCatalogCache implements CatalogCache {
         catalogBuilder.entries.addAll(entries)
         def json = catalogBuilder.asJson()
 
-        // TODO - replace the INSERT_CATALOG / UPDATE_CATALOG hack with PUT_CATALOG
-//        cacheDB.executeStatement(PUT_CATALOG, [catalogUrl, json, catalogUrl, json])
         try {
-            cacheDB.executeStatement(INSERT_CATALOG, [catalogUrl, json])
-        } catch (SQLIntegrityConstraintViolationException e) {
-            cacheDB.executeStatement(UPDATE_CATALOG, [json, catalogUrl])
+            //TODO - replace the INSERT_CATALOG / UPDATE_CATALOG hack with PUT_CATALOG
+//            cacheDB.executeStatement(PUT_CATALOG, [catalogUrl, json, catalogUrl, json])
+            try {
+                cacheDB.executeStatement(INSERT_CATALOG, [catalogUrl, json])
+            } catch (SQLIntegrityConstraintViolationException e) {
+                cacheDB.executeStatement(UPDATE_CATALOG, [json, catalogUrl])
+            }
+        } catch (Exception e) {
+            errorReporter.report("Failed to store entries for catalog $catalogUrl", e)
         }
 
     }

@@ -154,7 +154,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         Map<String, Map<Pair<String, Version>, BundleInfo>> categoryMap = new TreeMap<>();
         catalogUrls.forEach(url -> {
             CatalogRepo repo = new CatalogRepo(url, catalogCache);
-            List<BundleInfo> infoEntries = null;
+            List<BundleInfo> infoEntries = Collections.emptyList();
             try {
                 infoEntries = repo.getEntries();
             } catch (Exception e) {
