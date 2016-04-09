@@ -22,7 +22,7 @@ import java.util.List;
  */
 public interface BundleRepo {
     /**
-     * @return a list of {@link BundleInfo}, each entry describing a Viewreka bundle.
+     * @return a list of {@link BundleInfo}, each item describing a Viewreka bundle.
      * @throws Exception
      */
     List<BundleInfo> getEntries() throws Exception;

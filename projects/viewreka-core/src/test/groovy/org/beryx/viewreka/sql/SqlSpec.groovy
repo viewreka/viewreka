@@ -42,7 +42,7 @@ class SqlSpec extends Specification {
             /
         '''
 
-    @Shared DerbyDB db = new DerbyDB.Builder("${getClass().simpleName}-DB").withStatements(statements).createDB()
+    @Shared TestDB db = new TestDB("${getClass().simpleName}-DB", '', '', statements)
 
     def "retrieve values from a data source using a non-parameterized query"() {
         given:

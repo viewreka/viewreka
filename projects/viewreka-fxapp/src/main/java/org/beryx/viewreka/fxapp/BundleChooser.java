@@ -29,8 +29,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.beryx.viewreka.bundle.repo.CatalogCache;
 import org.beryx.viewreka.bundle.repo.CatalogRepo;
 import org.beryx.viewreka.bundle.repo.BundleInfo;
+import org.beryx.viewreka.bundle.repo.DerbyCatalogCache;
 import org.beryx.viewreka.core.Version;
 import org.beryx.viewreka.fxcommons.Dialogs;
 import org.beryx.viewreka.fxcommons.FXMLNode;
@@ -50,6 +52,7 @@ import java.util.*;
 public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareWindow {
     private static final Logger log = LoggerFactory.getLogger(BundleChooser.class);
 
+    public static final String PROP_CATALOG_CACHE = "repo.catalog.cache";
     public static final String PROP_CATALOG_URLS = "repo.catalog.urls";
     public static final String DEFAULT_CATALOG_URL  = "http://viewreka-bundles.beryx.org/json";
 
@@ -58,6 +61,8 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
     @FXML TreeTableColumn<BundleInfo, String> ttColVersion;
     @FXML TreeTableColumn<BundleInfo, String> ttColId;
     @FXML TreeTableColumn<BundleInfo, String> ttColDescription;
+
+    private CatalogCache catalogCache;
 
     private final SettingsManager<GuiSettings> guiSettingsManager;
     private final List<BundleInfo> initialInfoEntries;
@@ -138,13 +143,17 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         ttvBundles.getColumns().forEach(col -> col.impl_setReorderable(false));
 
         GuiSettings settings = guiSettingsManager.getSettings();
+
+        String cacheDbPath = settings.getProperty(PROP_CATALOG_CACHE, System.getProperty("user.home") + "/.viewreka/cache/catalog", false);
+        this.catalogCache = new DerbyCatalogCache(cacheDbPath);
+
         String[] urlArray = settings.getProperty(PROP_CATALOG_URLS, new String[]{DEFAULT_CATALOG_URL}, false);
         catalogUrls.addAll(Arrays.asList(urlArray));
         settings.setProperty(PROP_CATALOG_URLS, urlArray);
 
         Map<String, Map<Pair<String, Version>, BundleInfo>> categoryMap = new TreeMap<>();
         catalogUrls.forEach(url -> {
-            CatalogRepo repo = new CatalogRepo(url);
+            CatalogRepo repo = new CatalogRepo(url, catalogCache);
             List<BundleInfo> infoEntries = null;
             try {
                 infoEntries = repo.getEntries();

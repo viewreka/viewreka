@@ -41,6 +41,8 @@ project.version.with {
 }
 ext.viewrekaVersion = project.version as String
 
+ext.groovyVersion = '2.4.6'
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.11'
 }
@@ -99,6 +101,9 @@ subprojects {
     [compileGroovy, compileTestGroovy]*.options*.encoding = defaultEncoding
     [compileGroovy, compileTestGroovy]*.groovyOptions*.encoding = defaultEncoding
 
+    sourceSets.main.java.srcDirs = []
+    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
+
     configurations {
       provided
       compile {transitive = true}
@@ -119,13 +124,13 @@ subprojects {
     }
 
     dependencies {
+      compile "org.codehaus.groovy:groovy-all:$groovyVersion"
       compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.20'
       compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
       provided 'com.google.code.findbugs:findbugs-annotations:3.0.1'
 
 
       //testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-      testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
       testCompile ('com.github.siordache.spock:spock-core:3f3d9bc59fb6') {
           exclude module: 'groovy-all'
       }      
@@ -199,6 +204,7 @@ subprojects {
 
     task "create-dirs" << {
        sourceSets*.java.srcDirs*.each { it.mkdirs() }
+       sourceSets*.groovy.srcDirs*.each { it.mkdirs() }
        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
     }
 
@@ -296,20 +302,13 @@ project('viewreka-fxcommons') {
 project('viewreka-bundle-util') {
     apply plugin: "com.github.hauner.jarTest"
 
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxui')
-        compile "org.codehaus.groovy:groovy-all:$groovyVersion"
         testCompile project (path: ':viewreka-fxcommons', configuration: 'testArchives')
     }
 }
 
 project('viewreka-bundle-repo') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-bundle-util')
     }
@@ -325,18 +324,12 @@ project('viewreka-fxui') {
 }
 
 project('viewreka-dsl-core') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-bundle-repo')
     }
 }
 
 project('viewreka-fxdsl') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-dsl-core')
         compile project(':viewreka-fxui')
@@ -346,9 +339,6 @@ project('viewreka-fxdsl') {
 }
 
 project('viewreka-bundle-derby') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-bundle-util')
         compile "org.apache.derby:derby:10.12.1.1"
@@ -357,45 +347,30 @@ project('viewreka-bundle-derby') {
 }
 
 project('viewreka-bundle-parameter') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxdsl')
     }
 }
 
 project('viewreka-bundle-sql') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxdsl')
     }
 }
 
 project('viewreka-bundle-axis') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxdsl')
     }
 }
 
 project('viewreka-bundle-chart-html') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxdsl')
     }
 }
 
 project('viewreka-bundle-chart-xy') {
-    sourceSets.main.java.srcDirs = []
-    sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
-
     dependencies {
         compile project(':viewreka-fxdsl')
     }

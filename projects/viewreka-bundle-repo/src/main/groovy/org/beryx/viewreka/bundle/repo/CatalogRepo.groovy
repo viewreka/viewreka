@@ -14,50 +14,35 @@
  * limitations under the License.
  */
 package org.beryx.viewreka.bundle.repo
-
-import groovy.json.JsonSlurper
-import org.beryx.viewreka.core.Version
-
 /**
  * A {@link BundleRepo} implementation that loads the repository entries from a catalog located at a given URL.
- * The catalog must be in a JSON format compatible with the one produced by a {@link CatalogBuilder}.
+ * <br>If a {@link CatalogCache} is available, this implementation first tries to retrieve the catalog from the cache.
+ * <br>The catalog must be in a JSON format compatible with the one produced by a {@link CatalogBuilder}.
  */
 class CatalogRepo implements BundleRepo {
     final String catalogUrl
-    private List<BundleInfo> cachedEntries = null
+    final CatalogCache cache
 
-    CatalogRepo(String catalogUrl) {
+    private boolean shouldRefresh
+
+    CatalogRepo(String catalogUrl, CatalogCache cache = null) {
         this.catalogUrl = catalogUrl
+        this.cache = cache
     }
 
     @Override
     List<BundleInfo> getEntries() throws Exception {
-        if(cachedEntries == null) {
-            cachedEntries = []
-            Map catalog = new JsonSlurper().parse(new URL(catalogUrl))
-            catalog.entries.each { Map entry ->
-                def bundleInfo = new BundleInfo() {
-                    @Override String getBundleClass() { entry.bundleClass }
-                    @Override int getViewrekaVersionMajor() { entry.viewrekaVersionMajor as int }
-                    @Override int getViewrekaVersionMinor() { entry.viewrekaVersionMinor as int }
-                    @Override int getViewrekaVersionPatch() { entry.viewrekaVersionPatch as int }
-                    @Override List<String> getCategories() { entry.categories }
-                    @Override String getId() { entry.id }
-                    @Override String getName() { entry.name }
-                    @Override Version getVersion() { new Version(entry.version.major, entry.version.minor, entry.version.patch, entry.version.label, entry.version.releaseBuild) }
-                    @Override String getDescription() { entry.description }
-                    @Override String getUrl() { entry.url }
-                    @Override String getHomePage() { entry.homePage }
-                    @Override String toString() { "$entry.name $entry.version" }
-                }
-                cachedEntries << bundleInfo
-            }
+        List<BundleInfo> entries = shouldRefresh ? null : cache?.getEntries(catalogUrl)
+        shouldRefresh = false
+        if(!entries) {
+            entries = SimpleBundleInfo.fromJsonCatalogUrl(catalogUrl)
+            cache?.putEntries(catalogUrl, entries)
         }
-        cachedEntries
+        entries
     }
 
     @Override
     void refresh() {
-        cachedEntries = null
+        shouldRefresh = true
     }
 }
