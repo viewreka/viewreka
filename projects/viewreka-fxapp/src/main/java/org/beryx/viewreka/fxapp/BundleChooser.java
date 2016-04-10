@@ -32,7 +32,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.beryx.viewreka.bundle.repo.CatalogCache;
 import org.beryx.viewreka.bundle.repo.CatalogRepo;
 import org.beryx.viewreka.bundle.repo.BundleInfo;
-import org.beryx.viewreka.bundle.repo.DerbyCatalogCache;
+import org.beryx.viewreka.bundle.repo.H2CatalogCache;
 import org.beryx.viewreka.core.Version;
 import org.beryx.viewreka.fxcommons.Dialogs;
 import org.beryx.viewreka.fxcommons.FXMLNode;
@@ -145,7 +145,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         GuiSettings settings = guiSettingsManager.getSettings();
 
         String cacheDbPath = settings.getProperty(PROP_CATALOG_CACHE, System.getProperty("user.home") + "/.viewreka/cache/catalog", false);
-        this.catalogCache = new DerbyCatalogCache(cacheDbPath);
+        this.catalogCache = new H2CatalogCache(cacheDbPath);
 
         String[] urlArray = settings.getProperty(PROP_CATALOG_URLS, new String[]{DEFAULT_CATALOG_URL}, false);
         catalogUrls.addAll(Arrays.asList(urlArray));

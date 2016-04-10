@@ -17,7 +17,7 @@ package org.beryx.viewreka.bundle.repo
 
 import spock.lang.Specification
 
-class DerbyCatalogCacheSpec extends Specification {
+class H2CatalogCacheSpec extends Specification {
 
     List<BundleInfo> catalog1 = makeCatalog(6)
     List<BundleInfo> catalog2 = makeCatalog(4)
@@ -31,19 +31,18 @@ class DerbyCatalogCacheSpec extends Specification {
         catalogBuilder.entries.subList(0, entryCount)
     }
 
-    static String deleteCacheDir(String cacheName) {
-        File tmpDir = new File(System.properties['java.io.tmpdir'], 'derbycache-test')
-        def dbDir = new File(tmpDir, cacheName)
-        dbDir.deleteDir()
-        assert !dbDir.exists()
-        dbDir.path.replaceAll('\\\\', '/')
+    static String deleteAndGetCachePath(String cacheName) {
+        File tmpDir = new File(System.properties['java.io.tmpdir'], 'h2cache-test')
+        assert tmpDir.deleteDir()
+        String basePath = tmpDir.path.replaceAll('\\\\', '/')
+        "${basePath}/${cacheName}"
     }
 
     def "should correctly store and retrieve catalogs"() {
         given:
-        def cachePath = deleteCacheDir('cache1')
+        def cachePath = deleteAndGetCachePath('cacheH2')
         println "cachePath: $cachePath"
-        def cache = new DerbyCatalogCache(cachePath)
+        def cache = new H2CatalogCache(cachePath)
         def urlDefault = 'http://catalogs.example.com/default'
         def urlCustom = 'http://catalogs.example.com/custom'
 

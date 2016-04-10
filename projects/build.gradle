@@ -9,6 +9,7 @@ buildscript {
         }
     }
     dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
         classpath "gradle.plugin.gradle-plugins:jartest:1.0"
     }
 }
@@ -79,6 +80,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'findbugs'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'signing'
@@ -274,6 +276,7 @@ ideaWorkspace {
 project('viewreka-core') {
     dependencies {
         compile 'org.apache.commons:commons-lang3:3.4'
+        compile 'com.h2database:h2:1.4.191'
     }
 
     task configureVersionFile << {
@@ -399,6 +402,14 @@ project('viewreka-fxapp') {
             attributes 'Main-Class': 'org.beryx.viewreka.fxapp.DslViewrekaApp'
         }
     }
+
+    // Relocate the H2 library to prevent conflicts with the H2 vbundle
+    shadowJar {
+        relocate 'org.h2', 'org.beryx.viewreka.h2'
+        dependencies {
+            include(dependency('com.h2database:h2'))
+        }
+    }    
 
     mainClassName = 'org.beryx.viewreka.fxapp.DslViewrekaApp'
 

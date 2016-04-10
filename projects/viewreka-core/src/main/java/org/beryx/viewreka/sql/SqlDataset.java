@@ -134,7 +134,12 @@ public class SqlDataset implements Dataset {
         try {
             synchronized(rsLock) {
                 moveTo(row);
-                return resultSet.getObject(column, type);
+                try {
+                    return resultSet.getObject(column, type);
+                } catch (AbstractMethodError e) {
+                    // Try to deal with result sets that do not implement the JDBC 4.1 method java.sql.ResultSet.getObject(int, java.lang.Class<T>)
+                    return (T)resultSet.getObject(column);
+                }
             }
         } catch (SQLException e) {
             throw new ViewrekaException("rawGet(" + column + ", " + row + ", " + type + ") failed for dataset " + name, e);
@@ -153,7 +158,12 @@ public class SqlDataset implements Dataset {
         try {
             synchronized(rsLock) {
                 moveTo(row);
-                return resultSet.getObject(column, type);
+                try {
+                    return resultSet.getObject(column, type);
+                } catch (AbstractMethodError e) {
+                    // Try to deal with result sets that do not implement the JDBC 4.1 method java.sql.ResultSet.getObject(java.lang.String, java.lang.Class<T>)
+                    return (T)resultSet.getObject(column);
+                }
             }
         } catch (SQLException e) {
             throw new ViewrekaException("rawGet(" + column + ", " + row + ", " + type + ") failed for dataset " + name, e);

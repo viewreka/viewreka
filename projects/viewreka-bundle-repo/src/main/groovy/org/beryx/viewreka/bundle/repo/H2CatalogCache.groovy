@@ -16,16 +16,15 @@
 package org.beryx.viewreka.bundle.repo
 
 import groovy.util.logging.Slf4j
-import org.beryx.viewreka.sql.embedded.DerbyDB
+import org.beryx.viewreka.sql.embedded.H2DB
 
 import java.sql.Clob
-import java.sql.SQLIntegrityConstraintViolationException
 
 /**
  * A {@link CatalogCache} backed by an H2 database.
  */
 @Slf4j
-class DerbyCatalogCache implements CatalogCache {
+class H2CatalogCache implements CatalogCache {
     static final String CREATION_STATEMENTS = '''
         CREATE TABLE catalog (
              url VARCHAR(1024) PRIMARY KEY,
@@ -37,26 +36,16 @@ class DerbyCatalogCache implements CatalogCache {
     static final GET_CATALOG = 'select json from catalog where url=?'
 
     static final PUT_CATALOG = '''
-                merge into catalog dst
-                using catalog src
-                on src.url=?
-                when matched then update set lastUpdate=current_timestamp, json=?
-                when not matched then insert (url, lastUpdate, json) values(?, current_timestamp, ?)
+                merge into catalog(url, lastUpdate, json) key(url)
+                values (?, current_timestamp, ?)
                 '''.stripIndent()
 
-    static final INSERT_CATALOG = '''
-                insert into catalog (url, lastUpdate, json)
-                values(?, current_timestamp, ?)
-                '''
-
-    static final UPDATE_CATALOG = 'update catalog set lastUpdate=current_timestamp, json=? where url=?'
-
-    final DerbyDB cacheDB
+    final H2DB cacheDB
 
     CatalogCache.ErrorReporter errorReporter = {message, t -> log.warn(message, t)}
 
-    DerbyCatalogCache(String cacheDbPath) {
-        this.cacheDB = new DerbyDB(cacheDbPath, '', '')
+    H2CatalogCache(String cacheDbPath) {
+        this.cacheDB = new H2DB(cacheDbPath, '', '')
                 .withDefaultCreateAndDeleteStrategy()
                 .withCreationStatements(CREATION_STATEMENTS)
     }
@@ -86,16 +75,9 @@ class DerbyCatalogCache implements CatalogCache {
         def json = catalogBuilder.asJson()
 
         try {
-            //TODO - replace the INSERT_CATALOG / UPDATE_CATALOG hack with PUT_CATALOG
-//            cacheDB.executeStatement(PUT_CATALOG, [catalogUrl, json, catalogUrl, json])
-            try {
-                cacheDB.executeStatement(INSERT_CATALOG, [catalogUrl, json])
-            } catch (SQLIntegrityConstraintViolationException e) {
-                cacheDB.executeStatement(UPDATE_CATALOG, [json, catalogUrl])
-            }
+            cacheDB.executeStatement(PUT_CATALOG, [catalogUrl, json])
         } catch (Exception e) {
             errorReporter.report("Failed to store entries for catalog $catalogUrl", e)
         }
-
     }
 }

@@ -42,7 +42,7 @@ class SqlSpec extends Specification {
             /
         '''
 
-    @Shared TestDB db = new TestDB("${getClass().simpleName}-DB", '', '', statements)
+    @Shared TestDB db = TestDB.createInstance("${getClass().simpleName}-DB", '', '', statements)
 
     def "retrieve values from a data source using a non-parameterized query"() {
         given:

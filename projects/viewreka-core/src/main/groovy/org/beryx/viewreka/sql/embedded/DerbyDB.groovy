@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.viewreka.sql.util
+package org.beryx.viewreka.sql.embedded
 
+import groovy.util.logging.Slf4j
+
+import java.sql.SQLException
+
+/**
+ * Facade for Derby databases
+ */
+@Slf4j
 class DerbyDB extends EmbeddedDB {
     private static final DRIVER = 'org.apache.derby.jdbc.EmbeddedDriver'
 
@@ -22,12 +30,23 @@ class DerbyDB extends EmbeddedDB {
         super(DRIVER, dbPath, user, password)
     }
 
-    @Override String getBaseUrl() { "jdbc:derby:$dbPath" }
+    @Override String getBaseUrl() { "jdbc:derby:$dbPathAndName" }
     @Override String getUrlOptionCreate() { "create=true" }
     @Override String getUrlOptionIfExists() { null }
 
     DerbyDB withDefaultCreateAndDeleteStrategy() {
         withSqlStatesForCreateDB("XJ004")
         this
+    }
+
+    void deleteDB() {
+        log.info("Deleting the DB $dbPathAndName...")
+        File dbDir = new File(dbPathAndName)
+        if(dbDir.exists()) {
+            boolean deleted = dbDir.isDirectory() ? dbDir.deleteDir() : dbDir.delete()
+            if (!deleted) {
+                throw new SQLException("Cannot delete existing ${dbDir.isFile() ? 'file' : 'directory'} $dbPathAndName.")
+            }
+        }
     }
 }

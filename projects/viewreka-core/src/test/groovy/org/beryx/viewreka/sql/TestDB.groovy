@@ -15,25 +15,31 @@
  */
 package org.beryx.viewreka.sql
 
-import org.beryx.viewreka.sql.util.DerbyDB
+import org.beryx.viewreka.sql.embedded.H2DB
 
-class TestDB extends DerbyDB {
-    TestDB(String dbName, String user, String password, String statements) {
+class TestDB extends H2DB {
+
+    static TestDB createInstance(String dbName, String user, String password, String statements) {
+        TestDB testDB = new TestDB(dbName, user, password)
+        testDB.withDefaultCreateAndDeleteStrategy()
+        testDB.withCreationStatements(statements)
+        testDB.deleteDB()
+        testDB.createDB()
+        testDB.executeSelect("select * from person") {rs -> println rs}
+        testDB
+    }
+
+    private TestDB(String dbName, String user, String password) {
         super(createDbPath(dbName), user, password)
-        withDefaultCreateAndDeleteStrategy()
-        withCreationStatements(statements)
-        create(null)
     }
 
-    static String createDbPath(String dbName) {
+    private static String createDbPath(String dbName) {
         File tmpDir = new File(System.properties['java.io.tmpdir'], 'viewreka-test')
-        def dbDir = new File(tmpDir, dbName)
-        dbDir.deleteDir()
-        assert !dbDir.exists()
-        dbDir.path.replaceAll('\\\\', '/')
+        String baseDir = tmpDir.path.replaceAll('\\\\', '/')
+        "${baseDir}/${dbName}"
     }
 
-    @Override protected boolean shouldDeleteDBDirectoryOnError(Exception e) { true }
+    @Override protected boolean shouldDeleteDBOnError(Exception e) { true }
 
     String getUrl() {
         getUrlForCreationOption(urlOptionIfExists)
