@@ -17,15 +17,15 @@ package org.beryx.viewreka.sql.embedded
 
 import groovy.util.logging.Slf4j
 /**
- * Facade for standard H2 databases
+ * Facade for relocated H2 databases
  */
 @Slf4j
-class H2DB extends AbstractH2DB {
-    private static final DRIVER = 'org.h2.Driver'
+class H2RelocatedDB extends AbstractH2DB {
+    private static final DRIVER = 'org.beryx.viewreka.h2.RelocatedDriver'
 
-    H2DB(String dbPath, String user, String password) {
+    H2RelocatedDB(String dbPath, String user, String password) {
         super(DRIVER, dbPath, user, password)
     }
 
-    @Override String getBaseUrl() { "jdbc:h2:$dbPathAndName" }
+    @Override String getBaseUrl() { "jdbc:relocated-h2:$dbPathAndName" }
 }

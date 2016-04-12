@@ -16,6 +16,7 @@
 package org.beryx.viewreka.bundle.repo
 
 import groovy.util.logging.Slf4j
+import org.beryx.viewreka.sql.embedded.EmbeddedDB
 import org.beryx.viewreka.sql.embedded.H2DB
 
 import java.sql.Clob
@@ -40,16 +41,17 @@ class H2CatalogCache implements CatalogCache {
                 values (?, current_timestamp, ?)
                 '''.stripIndent()
 
-    final H2DB cacheDB
+    final EmbeddedDB cacheDB
 
     CatalogCache.ErrorReporter errorReporter = {message, t -> log.warn(message, t)}
 
-    H2CatalogCache(String cacheDbPath) {
-        this.cacheDB = new H2DB(cacheDbPath, '', '')
-                .withDefaultCreateAndDeleteStrategy()
-                .withCreationStatements(CREATION_STATEMENTS)
+    H2CatalogCache(EmbeddedDB cacheDB) {
+        this.cacheDB = cacheDB.withCreationStatements(CREATION_STATEMENTS)
     }
 
+    H2CatalogCache(String cacheDbPath) {
+        this(new H2DB(cacheDbPath, '', '').withDefaultCreateAndDeleteStrategy())
+    }
 
     @Override
     List<BundleInfo> getEntries(String catalogUrl) {

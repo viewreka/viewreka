@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.beryx.viewreka.sql.embedded
+package org.beryx.viewreka.h2
 
-import groovy.util.logging.Slf4j
-/**
- * Facade for standard H2 databases
- */
-@Slf4j
-class H2DB extends AbstractH2DB {
-    private static final DRIVER = 'org.h2.Driver'
+import spock.lang.Specification
 
-    H2DB(String dbPath, String user, String password) {
-        super(DRIVER, dbPath, user, password)
+class RelocatedDriverSpec extends Specification {
+    def cleanupSpec() {
+        RelocatedDriver.unload()
     }
 
-    @Override String getBaseUrl() { "jdbc:h2:$dbPathAndName" }
+    def "should accept only 'relocated-h2' URLs"() {
+        when:
+        RelocatedDriver driver = new RelocatedDriver()
+
+        then:
+        driver.acceptsURL("jdbc:relocated-h2:/test/myDB")
+        !driver.acceptsURL("jdbc:h2:/test/myDB")
+    }
 }

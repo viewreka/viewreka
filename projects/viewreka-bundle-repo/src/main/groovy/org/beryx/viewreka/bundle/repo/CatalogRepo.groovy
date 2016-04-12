@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 package org.beryx.viewreka.bundle.repo
+
+import groovy.util.logging.Slf4j
+
 /**
  * A {@link BundleRepo} implementation that loads the repository entries from a catalog located at a given URL.
  * <br>If a {@link CatalogCache} is available, this implementation first tries to retrieve the catalog from the cache.
  * <br>The catalog must be in a JSON format compatible with the one produced by a {@link CatalogBuilder}.
  */
+@Slf4j
 class CatalogRepo implements BundleRepo {
     final String catalogUrl
     final CatalogCache cache
@@ -34,8 +38,11 @@ class CatalogRepo implements BundleRepo {
     List<BundleInfo> getEntries() throws Exception {
         List<BundleInfo> entries = shouldRefresh ? null : cache?.getEntries(catalogUrl)
         shouldRefresh = false
-        if(!entries) {
+        if(entries) {
+            log.debug("${entries.size()} entries of $catalogUrl read from cache")
+        } else {
             entries = SimpleBundleInfo.fromJsonCatalogUrl(catalogUrl)
+            log.debug("${entries?.size()} entries of $catalogUrl read from URL")
             cache?.putEntries(catalogUrl, entries)
         }
         entries

@@ -10,6 +10,7 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.gradle-plugins:jartest:1.0"
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 
@@ -171,14 +172,7 @@ subprojects {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
-/*    
-    configureJavadoc(javadoc)
- 
-    task javadocJar(type: Jar, dependsOn: classes) {
-        classifier "javadoc"
-        from javadoc
-    }
-*/
+
     configureGroovydoc(groovydoc)
  
     task groovydocJar(type: Jar, dependsOn: classes) {
@@ -282,7 +276,6 @@ idea {
 ideaWorkspace {
   outputFile = file('viewreka.iws')
 }
-
 
 project('viewreka-core') {
     dependencies {
@@ -389,6 +382,36 @@ project('viewreka-bundle-chart-xy') {
     }
 }
 
+project('viewreka-h2') {
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    configurations {
+      h2relocated
+    }
+
+    dependencies {
+        compile 'com.h2database:h2:1.4.191'
+    }
+
+    jar.enabled = false
+
+    // Relocate the H2 library to prevent conflicts with H2 vbundles that use different versions
+    shadowJar {
+        archiveName = project.tasks['jar'].archiveName
+        mergeServiceFiles()
+        relocate 'org.h2', 'org.beryx.viewreka.h2'
+        dependencies {
+            include(dependency('com.h2database:h2'))
+            exclude('**/Driver.class')
+        }
+    }
+
+    artifacts {
+       h2relocated shadowJar.archivePath
+    }        
+
+    jar.dependsOn shadowJar
+}
 
 project('viewreka-fxapp') {
     apply plugin: 'application'
@@ -401,12 +424,14 @@ project('viewreka-fxapp') {
         compile project(':viewreka-bundle-chart-html')
         compile project(':viewreka-bundle-chart-xy')
         compile project(':viewreka-bundle-derby')
-
-        compile 'com.h2database:h2:1.4.191'
+        runtime project(path: ':viewreka-h2', configuration: 'h2relocated')
+        
         compile 'org.fxmisc.richtext:richtextfx:0.6.10'
         compile 'org.jcodec:jcodec:0.1.9'
     }
 
+    jar.dependsOn project(':viewreka-h2').tasks['jar']
+    
     jar {
         manifest {
             attributes 'Main-Class': 'org.beryx.viewreka.fxapp.DslViewrekaApp'
@@ -436,6 +461,7 @@ project('viewreka-fxapp') {
     applicationDistribution.from("${rootProject.projectDir}") {
         include('samples/**')
     }
+
 }
 
 task clean << {
@@ -443,61 +469,6 @@ task clean << {
     delete fileTree(dir: "samples", include: "**/*.settings.xml")
 }
 
-/*
-def distribute(String type) {
-    def appName = project(':viewreka-fxapp').applicationName
-    copy {
-        from project(':viewreka-fxapp').buildDir.path + '/distributions'
-        into 'build/distributions'
-        include "*.$type"
-        rename { fname -> (fname != "${appName}.$type") ?: "${appName}.$type" }
-    }
-}
-
-task distZip(dependsOn: ':viewreka-fxapp:distZip') << {
-    distribute 'zip'
-}
-
-task distTar(dependsOn: ':viewreka-fxapp:distTar') << {
-    distribute 'tar'
-}
-
-task assemble(dependsOn: ':viewreka-fxapp:assemble') << {
-    distribute 'zip'
-    distribute 'tar'
-}
-
-task installDist(dependsOn: ':viewreka-fxapp:installDist') << {
-    copy {
-        from project(':viewreka-fxapp').buildDir.path + '/install'
-        into 'build/install'
-   }
-}
-*/
-
-
-/*
-def configureJavadoc(task) {
-  configure(task) {
-    if(project.configurations.hasProperty('provided')) {
-        classpath += project.configurations.provided
-    }
-    configure(options) {
-      links "http://docs.oracle.com/javase/8/docs/api/"
-      links "http://docs.groovy-lang.org/docs/groovy-$groovyVersion/html/gapi/"
-    }
-  }
-}
-
-task javadoc(type: Javadoc) {
-  title "Viewreka Documentation ($viewrekaVersion)"
-  destinationDir file("build/javadoc")
-  source subprojects.javadoc.source
-  classpath = files(subprojects.javadoc.classpath)
-}
-
-configureJavadoc(javadoc)
-*/
 
 task groovydoc(type: Groovydoc) {
   docTitle "Viewreka Documentation ($viewrekaVersion)"

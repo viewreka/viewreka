@@ -40,6 +40,7 @@ import org.beryx.viewreka.fxui.settings.FxPropsAwareWindow;
 import org.beryx.viewreka.fxui.settings.FxPropsManager;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
 import org.beryx.viewreka.settings.SettingsManager;
+import org.beryx.viewreka.sql.embedded.H2RelocatedDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,7 +146,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         GuiSettings settings = guiSettingsManager.getSettings();
 
         String cacheDbPath = settings.getProperty(PROP_CATALOG_CACHE, System.getProperty("user.home") + "/.viewreka/cache/catalog", false);
-        this.catalogCache = new H2CatalogCache(cacheDbPath);
+        this.catalogCache = new H2CatalogCache(new H2RelocatedDB(cacheDbPath, "", "").withDefaultCreateAndDeleteStrategy());
 
         String[] urlArray = settings.getProperty(PROP_CATALOG_URLS, new String[]{DEFAULT_CATALOG_URL}, false);
         catalogUrls.addAll(Arrays.asList(urlArray));
