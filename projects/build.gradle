@@ -141,7 +141,6 @@ subprojects {
       }      
       testCompile 'cglib:cglib-nodep:3.2.1'
       testCompile 'org.objenesis:objenesis:2.2'
-      testCompile 'org.apache.derby:derby:10.12.1.1'
       testCompile('com.athaydes:spock-reports:1.2.10') { transitive = false}
 
       testCompile 'com.h2database:h2:1.4.191'
@@ -344,14 +343,6 @@ project('viewreka-fxdsl') {
     }
 }
 
-project('viewreka-bundle-derby') {
-    dependencies {
-        compile project(':viewreka-bundle-util')
-        compile "org.apache.derby:derby:10.12.1.1"
-        testCompile project (path: ':viewreka-bundle-util', configuration: 'testArchives')
-    }
-}
-
 project('viewreka-bundle-parameter') {
     dependencies {
         compile project(':viewreka-fxdsl')
@@ -423,7 +414,6 @@ project('viewreka-fxapp') {
         compile project(':viewreka-bundle-axis')
         compile project(':viewreka-bundle-chart-html')
         compile project(':viewreka-bundle-chart-xy')
-        compile project(':viewreka-bundle-derby')
         runtime project(path: ':viewreka-h2', configuration: 'h2relocated')
         
         compile 'org.fxmisc.richtext:richtextfx:0.6.10'

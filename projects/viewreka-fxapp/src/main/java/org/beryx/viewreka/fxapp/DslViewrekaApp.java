@@ -22,7 +22,6 @@ import java.util.List;
 import org.beryx.vbundle.chart.axis.AxisBundle;
 import org.beryx.vbundle.chart.html.HtmlChartBundle;
 import org.beryx.vbundle.chart.xy.XYChartBundle;
-import org.beryx.vbundle.derby.DerbyBundle;
 import org.beryx.vbundle.parameter.ParameterBundle;
 import org.beryx.vbundle.sql.SqlBundle;
 import org.beryx.viewreka.bundle.api.ViewrekaBundle;
@@ -44,8 +43,7 @@ public class DslViewrekaApp extends ViewrekaApp {
             new SqlBundle(),
             new AxisBundle(),
             new HtmlChartBundle(),
-            new XYChartBundle(),
-            new DerbyBundle());
+            new XYChartBundle());
     @Override
     protected ProjectReader<FxProject> getProjectReader() {
         return new ProjectReader<FxProject>() {

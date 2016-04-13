@@ -31,8 +31,8 @@ class ProjectBuilderSpec extends Specification {
 
     def static script2 = '''
         datasource dbWB(type : sql) {
-            driver = 'org.apache.derby.jdbc.EmbeddedDriver\'
-            connection = "jdbc:derby:jar:(${System.properties['user.dir']}/worldbank-db.zip)worldbank"
+            driver = 'org.beryx.viewreka.h2.RelocatedDriver\'
+            connection = "jdbc:relocated-h2:jar:(${System.properties['user.dir']}/worldbank"
         }
 
         view About {
