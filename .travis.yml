@@ -16,4 +16,4 @@ cache:
 
 script:
   - cd projects
-  - ./gradlew build
+  - ./gradlew -info -stacktrace build
