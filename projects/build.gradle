@@ -180,7 +180,7 @@ subprojects {
     }
 
     artifacts {
-        archives sourcesJar, groovydocJar
+        (System.getenv("TRAVIS") == "true") ? archives(sourcesJar) : archives(sourcesJar, groovydocJar)
     }
 
     publishing {
@@ -429,7 +429,7 @@ project('viewreka-fxapp') {
     }
     
     artifacts {
-        archives sourcesJar, groovydocJar
+        (System.getenv("TRAVIS") == "true") ? archives(sourcesJar) : archives(sourcesJar, groovydocJar)
     }
 
     mainClassName = 'org.beryx.viewreka.fxapp.DslViewrekaApp'
