@@ -49,7 +49,7 @@ class CatalogRepo implements BundleRepo {
     }
 
     @Override
-    void refresh() {
+    void requestRefresh() {
         shouldRefresh = true
     }
 }

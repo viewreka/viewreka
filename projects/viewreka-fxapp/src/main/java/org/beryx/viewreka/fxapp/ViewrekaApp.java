@@ -23,6 +23,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javafx.util.Duration;
 import org.beryx.viewreka.fxui.FxProject;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
 import org.beryx.viewreka.fxui.settings.GuiSettingsManager;
@@ -41,6 +42,9 @@ public abstract class ViewrekaApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         GuiSettingsManager guiSettingsManager = new GuiSettingsManager();
+        GuiSettings settings = guiSettingsManager.getSettings();
+        new CatalogManager(settings).startCacheUpdateThread(Duration.minutes(30), Duration.seconds(30));
+
         Viewreka viewreka = new Viewreka(getProjectReader(), guiSettingsManager).load();
         Scene scene = new Scene(viewreka, viewreka.getPrefWidth(), viewreka.getPrefHeight());
 
@@ -53,8 +57,6 @@ public abstract class ViewrekaApp extends Application {
         });
 
         stage.setScene(scene);
-
-        GuiSettings settings = guiSettingsManager.getSettings();
 
         stage.setX(settings.getWindowX());
         stage.setY(settings.getWindowY());

@@ -32,5 +32,5 @@ public interface BundleRepo {
      * Implementations are allowed to delay the reloading until the next call of {@link #getEntries()}.
      * @throws Exception
      */
-    void refresh() throws Exception;
+    void requestRefresh() throws Exception;
 }

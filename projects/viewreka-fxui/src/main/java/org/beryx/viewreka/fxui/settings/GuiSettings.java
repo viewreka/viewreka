@@ -57,13 +57,6 @@ public interface GuiSettings extends Settings {
 	 */
 	default <T extends Serializable> Object setProperty(String name, T value) {
         _log.debug("Setting {} to {}", name, value);
-        if("newProject.dialog.y".equals(name) && String.valueOf(value).startsWith("306")) {
-            try {
-                throw new Exception("WTF: " + value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 		return getProperties().put(name, value);
 	}
 

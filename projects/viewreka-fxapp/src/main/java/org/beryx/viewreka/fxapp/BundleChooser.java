@@ -29,10 +29,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.beryx.viewreka.bundle.repo.CatalogCache;
-import org.beryx.viewreka.bundle.repo.CatalogRepo;
 import org.beryx.viewreka.bundle.repo.BundleInfo;
-import org.beryx.viewreka.bundle.repo.H2CatalogCache;
+import org.beryx.viewreka.bundle.repo.CatalogRepo;
 import org.beryx.viewreka.core.Version;
 import org.beryx.viewreka.fxcommons.Dialogs;
 import org.beryx.viewreka.fxcommons.FXMLNode;
@@ -40,7 +38,6 @@ import org.beryx.viewreka.fxui.settings.FxPropsAwareWindow;
 import org.beryx.viewreka.fxui.settings.FxPropsManager;
 import org.beryx.viewreka.fxui.settings.GuiSettings;
 import org.beryx.viewreka.settings.SettingsManager;
-import org.beryx.viewreka.sql.embedded.H2RelocatedDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,23 +50,15 @@ import java.util.*;
 public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareWindow {
     private static final Logger log = LoggerFactory.getLogger(BundleChooser.class);
 
-    public static final String PROP_CATALOG_CACHE = "repo.catalog.cache";
-    public static final String PROP_CATALOG_URLS = "repo.catalog.urls";
-    public static final String DEFAULT_CATALOG_URL  = "http://viewreka-bundles.beryx.org/json";
-
     @FXML TreeTableView<BundleInfo> ttvBundles;
     @FXML TreeTableColumn<BundleInfo, BundleInfo> ttColName;
     @FXML TreeTableColumn<BundleInfo, String> ttColVersion;
     @FXML TreeTableColumn<BundleInfo, String> ttColId;
     @FXML TreeTableColumn<BundleInfo, String> ttColDescription;
 
-    private CatalogCache catalogCache;
-
     private final SettingsManager<GuiSettings> guiSettingsManager;
     private final List<BundleInfo> initialInfoEntries;
     private final List<Pair<String, Version>> existingBundles;
-
-    private final Set<String> catalogUrls = new LinkedHashSet<>();
 
     private final Map<Pair<String,Version>, BundleInfo> selectedBundlesMap = new LinkedHashMap<>();
 
@@ -80,7 +69,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
             this.category = category;
         }
         @Override public String getName() { return category; }
-        @Override public List<String> getCategories() { return Arrays.asList(category); }
+        @Override public List<String> getCategories() { return Collections.singletonList(category); }
         @Override public String getBundleClass() { return null; }
         @Override public int getViewrekaVersionMajor() { return 0; }
         @Override public int getViewrekaVersionMinor() { return 0; }
@@ -100,7 +89,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         private final BooleanProperty disabled = new SimpleBooleanProperty(this, "disabled", false) {
             @Override protected void invalidated() {
                 super.invalidated();
-                Event evt = new CheckBoxTreeItem.TreeModificationEvent<BundleInfo>(checkBoxSelectionChangedEvent(), BundleInfoTreeItem.this, true);
+                Event evt = new CheckBoxTreeItem.TreeModificationEvent<>(checkBoxSelectionChangedEvent(), BundleInfoTreeItem.this, true);
                 Event.fireEvent(BundleInfoTreeItem.this, evt);
             }
         };
@@ -143,18 +132,10 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
 
         ttvBundles.getColumns().forEach(col -> col.impl_setReorderable(false));
 
-        GuiSettings settings = guiSettingsManager.getSettings();
-
-        String cacheDbPath = settings.getProperty(PROP_CATALOG_CACHE, System.getProperty("user.home") + "/.viewreka/cache/catalog", false);
-        this.catalogCache = new H2CatalogCache(new H2RelocatedDB(cacheDbPath, "", "").withDefaultCreateAndDeleteStrategy());
-
-        String[] urlArray = settings.getProperty(PROP_CATALOG_URLS, new String[]{DEFAULT_CATALOG_URL}, false);
-        catalogUrls.addAll(Arrays.asList(urlArray));
-        settings.setProperty(PROP_CATALOG_URLS, urlArray);
-
+        CatalogManager catalogManager = new CatalogManager(guiSettingsManager.getSettings());
         Map<String, Map<Pair<String, Version>, BundleInfo>> categoryMap = new TreeMap<>();
-        catalogUrls.forEach(url -> {
-            CatalogRepo repo = new CatalogRepo(url, catalogCache);
+        catalogManager.getCatalogUrls().forEach(url -> {
+            CatalogRepo repo = new CatalogRepo(url, catalogManager.getCatalogCache());
             List<BundleInfo> infoEntries = Collections.emptyList();
             try {
                 infoEntries = repo.getEntries();
@@ -184,7 +165,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         ttvBundles.setRowFactory(item -> new BundleInfoTreeTableRow());
         ttColName.setCellFactory(p -> new BundleInfoNameTreeTableCell<>());
 
-        ttColName.setCellValueFactory(param -> new ReadOnlyObjectWrapper<BundleInfo>(param.getValue().getValue()));
+        ttColName.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getValue()));
         ttColVersion.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getVersion().toString()));
         ttColId.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getId()));
         ttColDescription.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getDescription()));
@@ -199,7 +180,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
             categoryItem.setExpanded(true);
             root.getChildren().add(categoryItem);
 
-            List<BundleInfo> bInfo = new ArrayList<BundleInfo>(categoryEntry.getValue().values());
+            List<BundleInfo> bInfo = new ArrayList<>(categoryEntry.getValue().values());
             bInfo.sort((b1, b2) -> {
                 int res = b1.getName().compareTo(b2.getName());
                 if(res == 0) {
@@ -242,7 +223,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         return manager;
     }
 
-    public void chooseBundles() {
+    @FXML private void chooseBundles() {
         selectedBundlesMap.clear();
 
         Set<String> selectedOrDisabledIds = new HashSet<>();
@@ -282,7 +263,7 @@ public class BundleChooser extends BorderPane implements FXMLNode, FxPropsAwareW
         ((Stage)getScene().getWindow()).close();
     }
 
-    public void cancelBundles() {
+    @FXML private void cancelBundles() {
         ((Stage)getScene().getWindow()).close();
     }
 

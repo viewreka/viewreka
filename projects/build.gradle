@@ -46,7 +46,7 @@ ext.viewrekaVersion = project.version as String
 ext.groovyVersion = '2.4.6'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.13'
 }
 
 repositories {
@@ -501,7 +501,10 @@ def readFromConsole(header, prompt, isPassword) {
         }
         String value = null;
         while(!value?.trim()) {
-            value = console."read${isPassword ? 'Password' : 'Line'}"("> $prompt: ")
+            def val = console."read${isPassword ? 'Password' : 'Line'}"("> $prompt: ")
+            if(val) {
+                value = new String(val)
+            }
         }
         return value
     } else {
